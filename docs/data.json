@@ -1,11 +1,11 @@
 {
   "suites": {
     "incident_management": {
-      "last_run": "2026-08-27T09:12:00",
-      "last_passed": 18,
-      "last_failed": 0,
+      "last_run": "2026-08-27T13:50:39.424142",
+      "last_passed": 3,
+      "last_failed": 15,
       "last_total": 18,
-      "last_rate": 100.0
+      "last_rate": 16.7
     },
     "autonomy_automation": {
       "last_run": "2026-08-27T11:30:00",
@@ -29,24 +29,114 @@
       "pass_rate": 94.4,
       "environment": "demo3.sirp.io",
       "results": [
-        {"step": "TC01 — Navigate to Incident Management", "status": "PASS", "detail": "Grid loaded", "time": "14:30:45"},
-        {"step": "TC02 — Grid filter tabs", "status": "PASS", "detail": "All / Alert / Case / Incident tabs visible", "time": "14:31:02"},
-        {"step": "TC03 — Create Ticket", "status": "PASS", "detail": "Created! URL redirected to details", "time": "14:31:38"},
-        {"step": "TC04 — Open Ticket Detail", "status": "PASS", "detail": "Detail view loaded", "time": "14:32:01"},
-        {"step": "TC05 — General Tab", "status": "PASS", "detail": "Time breakdown and analysis summary visible", "time": "14:32:15"},
-        {"step": "TC06 — OmniSense Assist Mode", "status": "PASS", "detail": "Agents: Enrichment, Classification, Analysis", "time": "14:32:40"},
-        {"step": "TC07 — Run Enrichment Agent", "status": "FAIL", "detail": "Timeout waiting for Run Agents button", "time": "14:33:10"},
-        {"step": "TC08 — Run Classification Agent", "status": "PASS", "detail": "Classification Agent clicked", "time": "14:33:35"},
-        {"step": "TC09 — OmniSense Autonomous Mode", "status": "PASS", "detail": "Switched to Autonomous Mode", "time": "14:33:58"},
-        {"step": "TC10 — Artifacts Tab Loads", "status": "PASS", "detail": "Add artifact button visible", "time": "14:34:15"},
-        {"step": "TC11 — Add Artifact", "status": "PASS", "detail": "Artifact 10.10.10.99 submitted", "time": "14:34:40"},
-        {"step": "TC12 — Add Comment", "status": "PASS", "detail": "Comment submitted", "time": "14:35:05"},
-        {"step": "TC13 — Tasks Tab", "status": "PASS", "detail": "Create Task button visible", "time": "14:35:20"},
-        {"step": "TC14 — Affected Entities Tab", "status": "PASS", "detail": "Create Entity button visible", "time": "14:35:35"},
-        {"step": "TC15 — Remediation Tab", "status": "PASS", "detail": "Remediation tab loaded", "time": "14:35:50"},
-        {"step": "TC16 — OmniMap Tab", "status": "PASS", "detail": "OmniMap with entity graph loaded", "time": "14:36:08"},
-        {"step": "TC17 — Logs Tab", "status": "PASS", "detail": "Playbooks and AI Agents sections visible", "time": "14:36:25"},
-        {"step": "TC18 — Context Panel & MITRE Mapping", "status": "PASS", "detail": "All context panel sections visible", "time": "14:36:45"}
+        {
+          "step": "TC01 \u2014 Navigate to Incident Management",
+          "status": "PASS",
+          "detail": "Grid loaded",
+          "time": "14:30:45"
+        },
+        {
+          "step": "TC02 \u2014 Grid filter tabs",
+          "status": "PASS",
+          "detail": "All / Alert / Case / Incident tabs visible",
+          "time": "14:31:02"
+        },
+        {
+          "step": "TC03 \u2014 Create Ticket",
+          "status": "PASS",
+          "detail": "Created! URL redirected to details",
+          "time": "14:31:38"
+        },
+        {
+          "step": "TC04 \u2014 Open Ticket Detail",
+          "status": "PASS",
+          "detail": "Detail view loaded",
+          "time": "14:32:01"
+        },
+        {
+          "step": "TC05 \u2014 General Tab",
+          "status": "PASS",
+          "detail": "Time breakdown and analysis summary visible",
+          "time": "14:32:15"
+        },
+        {
+          "step": "TC06 \u2014 OmniSense Assist Mode",
+          "status": "PASS",
+          "detail": "Agents: Enrichment, Classification, Analysis",
+          "time": "14:32:40"
+        },
+        {
+          "step": "TC07 \u2014 Run Enrichment Agent",
+          "status": "FAIL",
+          "detail": "Timeout waiting for Run Agents button",
+          "time": "14:33:10"
+        },
+        {
+          "step": "TC08 \u2014 Run Classification Agent",
+          "status": "PASS",
+          "detail": "Classification Agent clicked",
+          "time": "14:33:35"
+        },
+        {
+          "step": "TC09 \u2014 OmniSense Autonomous Mode",
+          "status": "PASS",
+          "detail": "Switched to Autonomous Mode",
+          "time": "14:33:58"
+        },
+        {
+          "step": "TC10 \u2014 Artifacts Tab Loads",
+          "status": "PASS",
+          "detail": "Add artifact button visible",
+          "time": "14:34:15"
+        },
+        {
+          "step": "TC11 \u2014 Add Artifact",
+          "status": "PASS",
+          "detail": "Artifact 10.10.10.99 submitted",
+          "time": "14:34:40"
+        },
+        {
+          "step": "TC12 \u2014 Add Comment",
+          "status": "PASS",
+          "detail": "Comment submitted",
+          "time": "14:35:05"
+        },
+        {
+          "step": "TC13 \u2014 Tasks Tab",
+          "status": "PASS",
+          "detail": "Create Task button visible",
+          "time": "14:35:20"
+        },
+        {
+          "step": "TC14 \u2014 Affected Entities Tab",
+          "status": "PASS",
+          "detail": "Create Entity button visible",
+          "time": "14:35:35"
+        },
+        {
+          "step": "TC15 \u2014 Remediation Tab",
+          "status": "PASS",
+          "detail": "Remediation tab loaded",
+          "time": "14:35:50"
+        },
+        {
+          "step": "TC16 \u2014 OmniMap Tab",
+          "status": "PASS",
+          "detail": "OmniMap with entity graph loaded",
+          "time": "14:36:08"
+        },
+        {
+          "step": "TC17 \u2014 Logs Tab",
+          "status": "PASS",
+          "detail": "Playbooks and AI Agents sections visible",
+          "time": "14:36:25"
+        },
+        {
+          "step": "TC18 \u2014 Context Panel & MITRE Mapping",
+          "status": "PASS",
+          "detail": "All context panel sections visible",
+          "time": "14:36:45"
+        }
       ]
     },
     {
@@ -62,24 +152,114 @@
       "pass_rate": 100.0,
       "environment": "demo3.sirp.io",
       "results": [
-        {"step": "TC01 — Navigate to Incident Management", "status": "PASS", "detail": "Grid loaded", "time": "09:12:22"},
-        {"step": "TC02 — Grid filter tabs", "status": "PASS", "detail": "All / Alert / Case / Incident tabs visible", "time": "09:12:38"},
-        {"step": "TC03 — Create Ticket", "status": "PASS", "detail": "Created! URL: /incidentManagement/details/4821", "time": "09:13:15"},
-        {"step": "TC04 — Open Ticket Detail", "status": "PASS", "detail": "URL: /incidentManagement/details/4821", "time": "09:13:40"},
-        {"step": "TC05 — General Tab", "status": "PASS", "detail": "Time breakdown and analysis summary visible", "time": "09:13:55"},
-        {"step": "TC06 — OmniSense Assist Mode", "status": "PASS", "detail": "Agents: Enrichment Agent, Classification Agent, Analysis Agent", "time": "09:14:20"},
-        {"step": "TC07 — Run Enrichment Agent", "status": "PASS", "detail": "Agent selected and Run clicked", "time": "09:14:45"},
-        {"step": "TC08 — Run Classification Agent", "status": "PASS", "detail": "Classification Agent clicked", "time": "09:15:10"},
-        {"step": "TC09 — OmniSense Autonomous Mode", "status": "PASS", "detail": "Switched to Autonomous Mode", "time": "09:15:32"},
-        {"step": "TC10 — Artifacts Tab Loads", "status": "PASS", "detail": "Add artifact button visible", "time": "09:15:50"},
-        {"step": "TC11 — Add Artifact", "status": "PASS", "detail": "Artifact 10.10.10.99 submitted", "time": "09:16:15"},
-        {"step": "TC12 — Add Comment", "status": "PASS", "detail": "Comment submitted", "time": "09:16:40"},
-        {"step": "TC13 — Tasks Tab", "status": "PASS", "detail": "Create Task button visible", "time": "09:16:55"},
-        {"step": "TC14 — Affected Entities Tab", "status": "PASS", "detail": "Create Entity button visible", "time": "09:17:10"},
-        {"step": "TC15 — Remediation Tab", "status": "PASS", "detail": "Remediation tab loaded", "time": "09:17:25"},
-        {"step": "TC16 — OmniMap Tab", "status": "PASS", "detail": "OmniMap with entity graph loaded", "time": "09:17:43"},
-        {"step": "TC17 — Logs Tab", "status": "PASS", "detail": "Playbooks and AI Agents sections visible", "time": "09:18:00"},
-        {"step": "TC18 — Context Panel & MITRE Mapping", "status": "PASS", "detail": "All context panel sections visible", "time": "09:18:20"}
+        {
+          "step": "TC01 \u2014 Navigate to Incident Management",
+          "status": "PASS",
+          "detail": "Grid loaded",
+          "time": "09:12:22"
+        },
+        {
+          "step": "TC02 \u2014 Grid filter tabs",
+          "status": "PASS",
+          "detail": "All / Alert / Case / Incident tabs visible",
+          "time": "09:12:38"
+        },
+        {
+          "step": "TC03 \u2014 Create Ticket",
+          "status": "PASS",
+          "detail": "Created! URL: /incidentManagement/details/4821",
+          "time": "09:13:15"
+        },
+        {
+          "step": "TC04 \u2014 Open Ticket Detail",
+          "status": "PASS",
+          "detail": "URL: /incidentManagement/details/4821",
+          "time": "09:13:40"
+        },
+        {
+          "step": "TC05 \u2014 General Tab",
+          "status": "PASS",
+          "detail": "Time breakdown and analysis summary visible",
+          "time": "09:13:55"
+        },
+        {
+          "step": "TC06 \u2014 OmniSense Assist Mode",
+          "status": "PASS",
+          "detail": "Agents: Enrichment Agent, Classification Agent, Analysis Agent",
+          "time": "09:14:20"
+        },
+        {
+          "step": "TC07 \u2014 Run Enrichment Agent",
+          "status": "PASS",
+          "detail": "Agent selected and Run clicked",
+          "time": "09:14:45"
+        },
+        {
+          "step": "TC08 \u2014 Run Classification Agent",
+          "status": "PASS",
+          "detail": "Classification Agent clicked",
+          "time": "09:15:10"
+        },
+        {
+          "step": "TC09 \u2014 OmniSense Autonomous Mode",
+          "status": "PASS",
+          "detail": "Switched to Autonomous Mode",
+          "time": "09:15:32"
+        },
+        {
+          "step": "TC10 \u2014 Artifacts Tab Loads",
+          "status": "PASS",
+          "detail": "Add artifact button visible",
+          "time": "09:15:50"
+        },
+        {
+          "step": "TC11 \u2014 Add Artifact",
+          "status": "PASS",
+          "detail": "Artifact 10.10.10.99 submitted",
+          "time": "09:16:15"
+        },
+        {
+          "step": "TC12 \u2014 Add Comment",
+          "status": "PASS",
+          "detail": "Comment submitted",
+          "time": "09:16:40"
+        },
+        {
+          "step": "TC13 \u2014 Tasks Tab",
+          "status": "PASS",
+          "detail": "Create Task button visible",
+          "time": "09:16:55"
+        },
+        {
+          "step": "TC14 \u2014 Affected Entities Tab",
+          "status": "PASS",
+          "detail": "Create Entity button visible",
+          "time": "09:17:10"
+        },
+        {
+          "step": "TC15 \u2014 Remediation Tab",
+          "status": "PASS",
+          "detail": "Remediation tab loaded",
+          "time": "09:17:25"
+        },
+        {
+          "step": "TC16 \u2014 OmniMap Tab",
+          "status": "PASS",
+          "detail": "OmniMap with entity graph loaded",
+          "time": "09:17:43"
+        },
+        {
+          "step": "TC17 \u2014 Logs Tab",
+          "status": "PASS",
+          "detail": "Playbooks and AI Agents sections visible",
+          "time": "09:18:00"
+        },
+        {
+          "step": "TC18 \u2014 Context Panel & MITRE Mapping",
+          "status": "PASS",
+          "detail": "All context panel sections visible",
+          "time": "09:18:20"
+        }
       ]
     },
     {
@@ -95,32 +275,162 @@
       "pass_rate": 88.5,
       "environment": "demo3.sirp.io",
       "results": [
-        {"step": "TC01 — Navigate to Autonomy", "status": "PASS", "detail": "Automation page loaded", "time": "14:00:38"},
-        {"step": "TC02 — Applications tab loads", "status": "PASS", "detail": "Applications tab visible", "time": "14:00:55"},
-        {"step": "TC03 — Applications grid visible", "status": "PASS", "detail": "Grid rendered with cards", "time": "14:01:12"},
-        {"step": "TC04 — Application search", "status": "PASS", "detail": "Local search works", "time": "14:01:35"},
-        {"step": "TC05 — Application card details", "status": "PASS", "detail": "Card detail expanded", "time": "14:02:00"},
-        {"step": "TC06 — Artifact Types tab", "status": "PASS", "detail": "Tab loaded", "time": "14:02:22"},
-        {"step": "TC07 — Artifact Types grid", "status": "PASS", "detail": "Grid visible", "time": "14:02:40"},
-        {"step": "TC08 — Artifact type search", "status": "PASS", "detail": "Search filtered results", "time": "14:03:05"},
-        {"step": "TC09 — Artifact type detail", "status": "PASS", "detail": "Detail loaded", "time": "14:03:28"},
-        {"step": "TC10 — Apply Manage Filters (Type=Custom)", "status": "FAIL", "detail": "Manage Filters dropdown position miscalculated", "time": "14:03:55"},
-        {"step": "TC11 — Actions tab loads", "status": "PASS", "detail": "Actions tab loaded", "time": "14:04:18"},
-        {"step": "TC12 — Actions grid visible", "status": "PASS", "detail": "Grid rendered", "time": "14:04:35"},
-        {"step": "TC13 — Action search", "status": "PASS", "detail": "Search works", "time": "14:05:00"},
-        {"step": "TC14 — Action detail view", "status": "PASS", "detail": "Detail view loaded", "time": "14:05:22"},
-        {"step": "TC15 — Create Action form (12 fields)", "status": "FAIL", "detail": "Input Type multi-select stuck after selection", "time": "14:05:50"},
-        {"step": "TC16 — Create Action submit", "status": "FAIL", "detail": "Blocked by TC15 form failure", "time": "14:06:10"},
-        {"step": "TC17 — Ingestion Sources tab", "status": "PASS", "detail": "Tab loaded", "time": "14:06:35"},
-        {"step": "TC18 — Ingestion grid visible", "status": "PASS", "detail": "Grid rendered", "time": "14:06:52"},
-        {"step": "TC19 — Ingestion search", "status": "PASS", "detail": "Search works", "time": "14:07:15"},
-        {"step": "TC20 — Create Action from Actions page", "status": "PASS", "detail": "Created and page auto-refreshed", "time": "14:07:42"},
-        {"step": "TC21 — Verify created action", "status": "PASS", "detail": "Action found in grid", "time": "14:08:05"},
-        {"step": "TC22 — Edit action", "status": "PASS", "detail": "Edit saved successfully", "time": "14:08:30"},
-        {"step": "TC23 — Delete action", "status": "PASS", "detail": "Deleted", "time": "14:08:55"},
-        {"step": "TC24 — Filter by type", "status": "PASS", "detail": "Filter applied correctly", "time": "14:09:18"},
-        {"step": "TC25 — Sort actions", "status": "PASS", "detail": "Sort applied", "time": "14:09:40"},
-        {"step": "TC26 — Pagination", "status": "PASS", "detail": "Pagination works", "time": "14:10:02"}
+        {
+          "step": "TC01 \u2014 Navigate to Autonomy",
+          "status": "PASS",
+          "detail": "Automation page loaded",
+          "time": "14:00:38"
+        },
+        {
+          "step": "TC02 \u2014 Applications tab loads",
+          "status": "PASS",
+          "detail": "Applications tab visible",
+          "time": "14:00:55"
+        },
+        {
+          "step": "TC03 \u2014 Applications grid visible",
+          "status": "PASS",
+          "detail": "Grid rendered with cards",
+          "time": "14:01:12"
+        },
+        {
+          "step": "TC04 \u2014 Application search",
+          "status": "PASS",
+          "detail": "Local search works",
+          "time": "14:01:35"
+        },
+        {
+          "step": "TC05 \u2014 Application card details",
+          "status": "PASS",
+          "detail": "Card detail expanded",
+          "time": "14:02:00"
+        },
+        {
+          "step": "TC06 \u2014 Artifact Types tab",
+          "status": "PASS",
+          "detail": "Tab loaded",
+          "time": "14:02:22"
+        },
+        {
+          "step": "TC07 \u2014 Artifact Types grid",
+          "status": "PASS",
+          "detail": "Grid visible",
+          "time": "14:02:40"
+        },
+        {
+          "step": "TC08 \u2014 Artifact type search",
+          "status": "PASS",
+          "detail": "Search filtered results",
+          "time": "14:03:05"
+        },
+        {
+          "step": "TC09 \u2014 Artifact type detail",
+          "status": "PASS",
+          "detail": "Detail loaded",
+          "time": "14:03:28"
+        },
+        {
+          "step": "TC10 \u2014 Apply Manage Filters (Type=Custom)",
+          "status": "FAIL",
+          "detail": "Manage Filters dropdown position miscalculated",
+          "time": "14:03:55"
+        },
+        {
+          "step": "TC11 \u2014 Actions tab loads",
+          "status": "PASS",
+          "detail": "Actions tab loaded",
+          "time": "14:04:18"
+        },
+        {
+          "step": "TC12 \u2014 Actions grid visible",
+          "status": "PASS",
+          "detail": "Grid rendered",
+          "time": "14:04:35"
+        },
+        {
+          "step": "TC13 \u2014 Action search",
+          "status": "PASS",
+          "detail": "Search works",
+          "time": "14:05:00"
+        },
+        {
+          "step": "TC14 \u2014 Action detail view",
+          "status": "PASS",
+          "detail": "Detail view loaded",
+          "time": "14:05:22"
+        },
+        {
+          "step": "TC15 \u2014 Create Action form (12 fields)",
+          "status": "FAIL",
+          "detail": "Input Type multi-select stuck after selection",
+          "time": "14:05:50"
+        },
+        {
+          "step": "TC16 \u2014 Create Action submit",
+          "status": "FAIL",
+          "detail": "Blocked by TC15 form failure",
+          "time": "14:06:10"
+        },
+        {
+          "step": "TC17 \u2014 Ingestion Sources tab",
+          "status": "PASS",
+          "detail": "Tab loaded",
+          "time": "14:06:35"
+        },
+        {
+          "step": "TC18 \u2014 Ingestion grid visible",
+          "status": "PASS",
+          "detail": "Grid rendered",
+          "time": "14:06:52"
+        },
+        {
+          "step": "TC19 \u2014 Ingestion search",
+          "status": "PASS",
+          "detail": "Search works",
+          "time": "14:07:15"
+        },
+        {
+          "step": "TC20 \u2014 Create Action from Actions page",
+          "status": "PASS",
+          "detail": "Created and page auto-refreshed",
+          "time": "14:07:42"
+        },
+        {
+          "step": "TC21 \u2014 Verify created action",
+          "status": "PASS",
+          "detail": "Action found in grid",
+          "time": "14:08:05"
+        },
+        {
+          "step": "TC22 \u2014 Edit action",
+          "status": "PASS",
+          "detail": "Edit saved successfully",
+          "time": "14:08:30"
+        },
+        {
+          "step": "TC23 \u2014 Delete action",
+          "status": "PASS",
+          "detail": "Deleted",
+          "time": "14:08:55"
+        },
+        {
+          "step": "TC24 \u2014 Filter by type",
+          "status": "PASS",
+          "detail": "Filter applied correctly",
+          "time": "14:09:18"
+        },
+        {
+          "step": "TC25 \u2014 Sort actions",
+          "status": "PASS",
+          "detail": "Sort applied",
+          "time": "14:09:40"
+        },
+        {
+          "step": "TC26 \u2014 Pagination",
+          "status": "PASS",
+          "detail": "Pagination works",
+          "time": "14:10:02"
+        }
       ]
     },
     {
@@ -136,32 +446,285 @@
       "pass_rate": 92.3,
       "environment": "demo3.sirp.io",
       "results": [
-        {"step": "TC01 — Navigate to Autonomy", "status": "PASS", "detail": "Automation page loaded", "time": "11:30:22"},
-        {"step": "TC02 — Applications tab loads", "status": "PASS", "detail": "Tab visible", "time": "11:30:38"},
-        {"step": "TC03 — Applications grid visible", "status": "PASS", "detail": "Grid rendered", "time": "11:30:55"},
-        {"step": "TC04 — Application search", "status": "PASS", "detail": "Search works", "time": "11:31:18"},
-        {"step": "TC05 — Application card details", "status": "PASS", "detail": "Card detail expanded", "time": "11:31:42"},
-        {"step": "TC06 — Artifact Types tab", "status": "PASS", "detail": "Tab loaded", "time": "11:32:05"},
-        {"step": "TC07 — Artifact Types grid", "status": "PASS", "detail": "Grid visible", "time": "11:32:22"},
-        {"step": "TC08 — Artifact type search", "status": "PASS", "detail": "Search works", "time": "11:32:45"},
-        {"step": "TC09 — Artifact type detail", "status": "PASS", "detail": "Detail loaded", "time": "11:33:08"},
-        {"step": "TC10 — Apply Manage Filters (Type=Custom)", "status": "PASS", "detail": "Filter applied via bounding box JS", "time": "11:33:35"},
-        {"step": "TC11 — Actions tab loads", "status": "PASS", "detail": "Actions tab loaded", "time": "11:33:58"},
-        {"step": "TC12 — Actions grid visible", "status": "PASS", "detail": "Grid rendered", "time": "11:34:15"},
-        {"step": "TC13 — Action search", "status": "PASS", "detail": "Search works", "time": "11:34:38"},
-        {"step": "TC14 — Action detail view", "status": "PASS", "detail": "Detail view loaded", "time": "11:35:00"},
-        {"step": "TC15 — Create Action form (12 fields)", "status": "FAIL", "detail": "Input Type multi-select dropdown not closing", "time": "11:35:30"},
-        {"step": "TC16 — Create Action submit", "status": "FAIL", "detail": "Blocked by TC15", "time": "11:35:50"},
-        {"step": "TC17 — Ingestion Sources tab", "status": "PASS", "detail": "Tab loaded", "time": "11:36:15"},
-        {"step": "TC18 — Ingestion grid visible", "status": "PASS", "detail": "Grid rendered", "time": "11:36:32"},
-        {"step": "TC19 — Ingestion search", "status": "PASS", "detail": "Search works", "time": "11:36:55"},
-        {"step": "TC20 — Create Action from Actions page", "status": "PASS", "detail": "Created", "time": "11:37:22"},
-        {"step": "TC21 — Verify created action", "status": "PASS", "detail": "Found in grid", "time": "11:37:45"},
-        {"step": "TC22 — Edit action", "status": "PASS", "detail": "Saved", "time": "11:38:10"},
-        {"step": "TC23 — Delete action", "status": "PASS", "detail": "Deleted", "time": "11:38:35"},
-        {"step": "TC24 — Filter by type", "status": "PASS", "detail": "Filter works", "time": "11:38:58"},
-        {"step": "TC25 — Sort actions", "status": "PASS", "detail": "Sort applied", "time": "11:39:20"},
-        {"step": "TC26 — Pagination", "status": "PASS", "detail": "Next page loaded", "time": "11:39:42"}
+        {
+          "step": "TC01 \u2014 Navigate to Autonomy",
+          "status": "PASS",
+          "detail": "Automation page loaded",
+          "time": "11:30:22"
+        },
+        {
+          "step": "TC02 \u2014 Applications tab loads",
+          "status": "PASS",
+          "detail": "Tab visible",
+          "time": "11:30:38"
+        },
+        {
+          "step": "TC03 \u2014 Applications grid visible",
+          "status": "PASS",
+          "detail": "Grid rendered",
+          "time": "11:30:55"
+        },
+        {
+          "step": "TC04 \u2014 Application search",
+          "status": "PASS",
+          "detail": "Search works",
+          "time": "11:31:18"
+        },
+        {
+          "step": "TC05 \u2014 Application card details",
+          "status": "PASS",
+          "detail": "Card detail expanded",
+          "time": "11:31:42"
+        },
+        {
+          "step": "TC06 \u2014 Artifact Types tab",
+          "status": "PASS",
+          "detail": "Tab loaded",
+          "time": "11:32:05"
+        },
+        {
+          "step": "TC07 \u2014 Artifact Types grid",
+          "status": "PASS",
+          "detail": "Grid visible",
+          "time": "11:32:22"
+        },
+        {
+          "step": "TC08 \u2014 Artifact type search",
+          "status": "PASS",
+          "detail": "Search works",
+          "time": "11:32:45"
+        },
+        {
+          "step": "TC09 \u2014 Artifact type detail",
+          "status": "PASS",
+          "detail": "Detail loaded",
+          "time": "11:33:08"
+        },
+        {
+          "step": "TC10 \u2014 Apply Manage Filters (Type=Custom)",
+          "status": "PASS",
+          "detail": "Filter applied via bounding box JS",
+          "time": "11:33:35"
+        },
+        {
+          "step": "TC11 \u2014 Actions tab loads",
+          "status": "PASS",
+          "detail": "Actions tab loaded",
+          "time": "11:33:58"
+        },
+        {
+          "step": "TC12 \u2014 Actions grid visible",
+          "status": "PASS",
+          "detail": "Grid rendered",
+          "time": "11:34:15"
+        },
+        {
+          "step": "TC13 \u2014 Action search",
+          "status": "PASS",
+          "detail": "Search works",
+          "time": "11:34:38"
+        },
+        {
+          "step": "TC14 \u2014 Action detail view",
+          "status": "PASS",
+          "detail": "Detail view loaded",
+          "time": "11:35:00"
+        },
+        {
+          "step": "TC15 \u2014 Create Action form (12 fields)",
+          "status": "FAIL",
+          "detail": "Input Type multi-select dropdown not closing",
+          "time": "11:35:30"
+        },
+        {
+          "step": "TC16 \u2014 Create Action submit",
+          "status": "FAIL",
+          "detail": "Blocked by TC15",
+          "time": "11:35:50"
+        },
+        {
+          "step": "TC17 \u2014 Ingestion Sources tab",
+          "status": "PASS",
+          "detail": "Tab loaded",
+          "time": "11:36:15"
+        },
+        {
+          "step": "TC18 \u2014 Ingestion grid visible",
+          "status": "PASS",
+          "detail": "Grid rendered",
+          "time": "11:36:32"
+        },
+        {
+          "step": "TC19 \u2014 Ingestion search",
+          "status": "PASS",
+          "detail": "Search works",
+          "time": "11:36:55"
+        },
+        {
+          "step": "TC20 \u2014 Create Action from Actions page",
+          "status": "PASS",
+          "detail": "Created",
+          "time": "11:37:22"
+        },
+        {
+          "step": "TC21 \u2014 Verify created action",
+          "status": "PASS",
+          "detail": "Found in grid",
+          "time": "11:37:45"
+        },
+        {
+          "step": "TC22 \u2014 Edit action",
+          "status": "PASS",
+          "detail": "Saved",
+          "time": "11:38:10"
+        },
+        {
+          "step": "TC23 \u2014 Delete action",
+          "status": "PASS",
+          "detail": "Deleted",
+          "time": "11:38:35"
+        },
+        {
+          "step": "TC24 \u2014 Filter by type",
+          "status": "PASS",
+          "detail": "Filter works",
+          "time": "11:38:58"
+        },
+        {
+          "step": "TC25 \u2014 Sort actions",
+          "status": "PASS",
+          "detail": "Sort applied",
+          "time": "11:39:20"
+        },
+        {
+          "step": "TC26 \u2014 Pagination",
+          "status": "PASS",
+          "detail": "Next page loaded",
+          "time": "11:39:42"
+        }
+      ]
+    },
+    {
+      "suite": "incident_management",
+      "run_id": "20260827_135039",
+      "timestamp": "2026-08-27T13:50:39.424142",
+      "date": "2026-08-27",
+      "time": "13:50:39",
+      "duration_s": 208.24,
+      "total": 18,
+      "passed": 3,
+      "failed": 15,
+      "pass_rate": 16.7,
+      "environment": "demo3.sirp.io",
+      "results": [
+        {
+          "step": "TC01 \u2014 Navigate to Incident Management",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC02 \u2014 Grid filter tabs",
+          "status": "FAIL",
+          "detail": "Tab 'All' not found as visible non-menu element",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC03 \u2014 Create Ticket",
+          "status": "PASS",
+          "detail": "Ticket created \u2014 form closed, on grid",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC04 \u2014 Open Ticket Detail",
+          "status": "FAIL",
+          "detail": "Not enough detail tabs found: []",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC05 \u2014 General Tab",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC06 \u2014 OmniSense Assist Mode",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC07 \u2014 Run Enrichment Agent",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC08 \u2014 Run Classification Agent",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC09 \u2014 OmniSense Autonomous Mode",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC10 \u2014 Artifacts Tab",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC11 \u2014 Affected Entities Tab",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC12 \u2014 Remediation Tab",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC13 \u2014 Add Comment",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC14 \u2014 Tasks Tab",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC15 \u2014 OmniMap Tab",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC16 \u2014 Logs Tab",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC17 \u2014 Context + Timeline",
+          "status": "PASS",
+          "detail": "Context: check screenshot | Timeline: check screenshot",
+          "time": "13:50:39"
+        },
+        {
+          "step": "TC18 \u2014 SARA Panel",
+          "status": "PASS",
+          "detail": "Content: panel loaded \u2014 check screenshot",
+          "time": "13:50:39"
+        }
       ]
     }
   ]
