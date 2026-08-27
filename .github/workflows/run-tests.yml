@@ -1,0 +1,70 @@
+name: QA Regression Suite
+
+on:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: 'Which suite to run'
+        required: true
+        default: 'im'
+        type: choice
+        options:
+          - im
+          - autonomy
+          - all
+
+  push:
+    branches: [main]
+    paths:
+      - 'tests/**'
+      - 'utils/**'
+      - 'conftest.py'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install pytest playwright requests
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Run IM Suite
+        if: ${{ github.event.inputs.suite == 'im' || github.event.inputs.suite == 'all' || github.event.inputs.suite == '' }}
+        continue-on-error: true
+        env:
+          HEADLESS: "1"
+        run: |
+          mkdir -p reports
+          python -m pytest tests/test_incident_management_e2e.py -v -s 2>&1 | tee reports/im_output.txt || true
+
+      - name: Run Autonomy Suite
+        if: ${{ github.event.inputs.suite == 'autonomy' || github.event.inputs.suite == 'all' || github.event.inputs.suite == '' }}
+        continue-on-error: true
+        env:
+          HEADLESS: "1"
+        run: |
+          mkdir -p reports
+          python -m pytest tests/test_autonomy_automation_e2e.py -v -s 2>&1 | tee reports/autonomy_output.txt || true
+
+      - name: Update dashboard
+        run: python scripts/update_dashboard.py
+
+      - name: Push dashboard update
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add docs/data.json
+          git diff --staged --quiet || git commit -m "Dashboard: $(date +'%Y-%m-%d %H:%M') [skip ci]"
+          git push
