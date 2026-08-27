@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<title>SIRP IM E2E — 20260708_172715</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f172a;color:#e5e7eb}
+.hdr{background:linear-gradient(135deg,#1e1b4b,#312e81,#1e40af);padding:40px 48px}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.logo{font-size:13px;color:#a5b4fc;letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.rid{font-size:11px;color:#818cf8;background:rgba(99,102,241,.2);padding:4px 10px;border-radius:8px}
+h1{font-size:26px;font-weight:700;color:#fff;margin:12px 0 4px}
+.sub{color:#a5b4fc;font-size:14px}
+.meta{display:flex;gap:24px;margin-top:16px;flex-wrap:wrap}
+.mi{font-size:12px;color:#818cf8}.mi span{color:#c7d2fe;font-weight:500}
+.content{padding:32px 48px;max-width:1300px;margin:0 auto}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.metric{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;text-align:center}
+.mv{font-size:32px;font-weight:700;margin-bottom:4px}
+.ml{font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;margin-bottom:24px;overflow:hidden}
+.ch{padding:16px 20px;background:#263548;border-bottom:1px solid #334155;font-size:14px;font-weight:600;color:#e2e8f0}
+table{width:100%;border-collapse:collapse}
+th{padding:10px 12px;text-align:left;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;background:#162032;border-bottom:1px solid #334155}
+tr:hover{background:rgba(255,255,255,.02)}
+.pb{background:#374151;border-radius:4px;height:10px;width:100%;margin:8px 0}
+.pf{border-radius:4px;height:10px}
+.footer{padding:24px 48px;text-align:center;color:#475569;font-size:12px;border-top:1px solid #1e293b;margin-top:16px}
+</style></head><body>
+<div class="hdr">
+  <div class="hdr-top"><div class="logo">SIRP Platform — Incident Management QA</div><div class="rid">RUN: 20260708_172715</div></div>
+  <h1>Incident Management — End-to-End Test Report</h1>
+  <div class="sub">Create Ticket → All Tabs → OmniSense Agents → Artifacts → Comments</div>
+  <div class="meta">
+    <div class="mi">Date: <span>July 08, 2026</span></div>
+    <div class="mi">Time: <span>17:28:06</span></div>
+    <div class="mi">Environment: <span>demo3.sirp.io</span></div>
+    <div class="mi">Prepared by: <span>Saifa — QA Engineer</span></div>
+    <div class="mi">Framework: <span>Playwright + pytest</span></div>
+  </div>
+</div>
+<div class="content">
+  <div class="metrics">
+    <div class="metric"><div class="mv" style="color:#e2e8f0">1</div><div class="ml">Total Tests</div></div>
+    <div class="metric"><div class="mv" style="color:#22c55e">0</div><div class="ml">Passed</div></div>
+    <div class="metric"><div class="mv" style="color:#ef4444">1</div><div class="ml">Failed</div></div>
+    <div class="metric"><div class="mv" style="color:#ef4444">0%</div><div class="ml">Pass Rate</div></div>
+  </div>
+  <div class="card" style="padding:20px 24px;margin-bottom:24px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+      <span style="font-size:13px;color:#94a3b8">Overall pass rate</span>
+      <span style="font-size:13px;font-weight:600;color:#ef4444">0%</span>
+    </div>
+    <div class="pb"><div class="pf" style="width:0%;background:#ef4444"></div></div>
+  </div>
+  <div class="card">
+    <div class="ch">Step-by-Step Test Results</div>
+    <table>
+      <thead><tr><th>#</th><th>Time</th><th>Test Step</th><th>Status</th><th>Detail / Evidence</th></tr></thead>
+      <tbody><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">1</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">17:28:05</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC05 — General Tab</td>
+          <td style="padding:10px 12px;"><span style="background:#fee2e2;color:#991b1b;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">❌ FAIL</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Locator expected to be visible
+Actual value: None
+Error: element(s) not found 
+Call log:
+  - Expect "to_be_visible" with timeout 10000ms
+  - waiting for locator("span:has-text('General')").first
+</td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">SIRP IM E2E Report • 2026-07-08 17:28 • Confidential — Internal QA Use Only</div>
+</body></html>
