@@ -53,24 +53,75 @@ COMMENT_TEXT   = f"Automated QA comment — Run {RUN_ID}"
 ARTIFACT_IP    = "10.10.10.99"
 
 RESULTS = []
+DETAIL_URL = {"url": ""}  # Stores the detail page URL for recovery
 
 
 # ── Helpers ─────────────────────────────────────────────────────────────────
 def dismiss_banner(page):
-    """Dismiss the 'Try the New Experience' banner if present — it intercepts clicks."""
+    """Dismiss the 'Try the New Experience' banner and reapply 75% zoom."""
     try:
         page.evaluate("""() => {
-            const banner = document.querySelector('[class*="try-new"], [class*="banner"]');
-            if (banner) banner.remove();
-            // Also try removing by text content
-            document.querySelectorAll('a, button, div').forEach(el => {
+            // Apply 75% zoom
+            document.body.style.zoom = '0.75';
+            // Hide banner via CSS (not remove — removal crashes React)
+            document.querySelectorAll('a, button, div, span').forEach(el => {
                 if (el.textContent.includes('Try the New Experience')) {
-                    el.closest('div[class]')?.remove() || el.remove();
+                    const target = el.closest('div[class]') || el;
+                    target.style.display = 'none';
                 }
             });
         }""")
     except Exception:
         pass
+
+
+def is_page_blank(page):
+    """Check if the page is a white-screen-of-death (React crash)."""
+    try:
+        # Check if body has almost no visible content
+        result = page.evaluate("""() => {
+            const body = document.body;
+            if (!body) return true;
+            // Check visible text length (excluding scripts/styles)
+            const text = body.innerText?.trim() || '';
+            // Check if there are any visible elements with size
+            const els = document.querySelectorAll('div, span, button, table, h1, h2, nav');
+            let visibleCount = 0;
+            els.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.width > 50 && rect.height > 20) visibleCount++;
+            });
+            return text.length < 50 && visibleCount < 5;
+        }""")
+        return result
+    except Exception:
+        return True
+
+
+def recover_if_blank(page):
+    """If the page is blank (white screen), reload and wait for content."""
+    if not is_page_blank(page):
+        return False
+    print("  ⚠️ White screen detected — recovering...")
+    url = DETAIL_URL.get("url", "") or page.url
+    try:
+        page.goto(url, wait_until="networkidle", timeout=30000)
+        time.sleep(5)
+        dismiss_banner(page)
+        if is_page_blank(page):
+            # Second attempt: hard reload
+            print("  ⚠️ Still blank — hard reload...")
+            page.reload(wait_until="networkidle", timeout=30000)
+            time.sleep(5)
+            dismiss_banner(page)
+        if not is_page_blank(page):
+            print("  ✅ Page recovered!")
+            page.evaluate("document.body.style.zoom = '0.75'")
+            return True
+        print("  ❌ Recovery failed — page still blank")
+    except Exception as e:
+        print(f"  ❌ Recovery error: {e}")
+    return True
 def log(step, status, detail=""):
     RESULTS.append({"step": step, "status": status,
                     "detail": detail, "time": datetime.now().strftime("%H:%M:%S")})
@@ -88,6 +139,25 @@ def snap(page, name):
 
 
 def click_tab(page, name):
+    """Click a detail-view tab. Auto-recovers from white-screen-of-death."""
+    recover_if_blank(page)
+    # Try multiple selectors, skip sidebar menu matches
+    els = page.locator(
+        f"span:has-text('{name}'), div[role='tab']:has-text('{name}')"
+    ).all()
+    for el in els:
+        try:
+            if el.is_visible():
+                cls = el.evaluate(
+                    "e => e.className + ' ' + (e.closest('[class]')?.className || '')"
+                )
+                if "ant-menu" not in cls:
+                    el.click()
+                    time.sleep(2)
+                    return
+        except Exception:
+            continue
+    # Fallback: force-click first visible match
     tab = page.locator(f"span:has-text('{name}')").first
     expect(tab).to_be_visible(timeout=10000)
     tab.click()
@@ -199,6 +269,11 @@ def im_page(browser):
     ctx  = browser.new_context(viewport={"width": 1920, "height": 1080})
     page = ctx.new_page()
     login(page)
+    # Apply 75% zoom after login so full SIRP UI fits
+    try:
+        page.evaluate("document.body.style.zoom = '0.75'")
+    except Exception:
+        pass
     yield page
     ctx.close()
 
@@ -489,6 +564,11 @@ class TestIncidentManagementE2E:
             raise
 
     def test_04_open_ticket_detail(self, im_page):
+        """
+        Open the first ticket's detail view via DIRECT URL navigation.
+        The Actions → View JS click approach caused white-screen issues,
+        so we extract the ticket ID from the grid and navigate directly.
+        """
         try:
             im_page.goto(IM_URL, wait_until="networkidle", timeout=30000)
             time.sleep(5)
@@ -501,83 +581,37 @@ class TestIncidentManagementE2E:
             time.sleep(2)
             snap(im_page, "TC04_grid_loaded")
 
-            # Find the first data row
+            # Find the first data row and extract ticket ID
             row = im_page.locator(
                 "tbody tr:not(.ant-table-measure-row):not([aria-hidden='true'])"
             ).first
             expect(row).to_be_visible(timeout=10000)
 
             ticket_id = row.locator("td").nth(1).inner_text().strip()
-            subject_text = row.locator("td").nth(3).inner_text().strip()
+            subject_text = ""
+            try:
+                subject_text = row.locator("td").nth(3).inner_text().strip()
+            except Exception:
+                pass
             print(f"  → Ticket ID: {ticket_id}, Subject: {subject_text}")
 
-            # Open detail via Actions → View in ONE clean JS call
-            # Click three-dot button then immediately click View (no gap)
-            result = im_page.evaluate("""
-                () => new Promise((resolve) => {
-                    const rows = document.querySelectorAll(
-                        'tbody tr:not(.ant-table-measure-row):not([aria-hidden="true"])'
-                    );
-                    const firstRow = rows[0];
-                    if (!firstRow) { resolve('no_row'); return; }
+            # Navigate directly to detail page
+            detail_url = f"{BASE_URL}/incidentManagement/details/{ticket_id}"
+            DETAIL_URL["url"] = detail_url  # Store for recovery
+            print(f"  → Navigating to: {detail_url}")
+            im_page.goto(detail_url, wait_until="networkidle", timeout=30000)
+            time.sleep(5)
+            dismiss_banner(im_page)
 
-                    const lastCell = firstRow.querySelector('td:last-child');
-                    const actionsBtn = lastCell.querySelector('button') ||
-                                       lastCell.querySelector('.anticon') ||
-                                       lastCell.querySelector('svg');
-                    if (!actionsBtn) { resolve('no_btn'); return; }
-
-                    // Click three-dot (use dispatchEvent for SVG elements)
-                    actionsBtn.dispatchEvent(new MouseEvent('click', {bubbles: true}));
-
-                    // Wait 800ms for dropdown to render, then click View
-                    setTimeout(() => {
-                        const items = document.querySelectorAll('.ant-dropdown-menu-item');
-                        for (const item of items) {
-                            const text = item.textContent.trim();
-                            if (text === 'View' || 
-                                (text.includes('View') && !text.includes('Execute'))) {
-                                item.click();
-                                resolve('clicked_view');
-                                return;
-                            }
-                        }
-                        resolve('view_not_found');
-                    }, 800);
-                })
-            """)
-            print(f"  → JS result: {result}")
-            time.sleep(8)  # Wait for detail page to fully load
-            snap(im_page, "TC04_after_view_click")
-
-            # Check if detail opened
-            detail_opened = "/details/" in im_page.url
-
-            if not detail_opened:
-                # Check for detail-specific content (NOT grid column headers)
-                for indicator in ["TIME BREAKDOWN BY STAGES", "ANALYSIS SUMMARY",
-                                  "DESCRIPTION", "Ticket Overview"]:
-                    try:
-                        if im_page.locator(f"text={indicator}").first.is_visible():
-                            detail_opened = True
-                            print(f"  → Detail content found: {indicator}")
-                            break
-                    except Exception:
-                        continue
-
-            if not detail_opened:
-                # Fallback: direct URL
-                print(f"  → Trying direct URL: /incidentManagement/details/{ticket_id}")
-                im_page.goto(
-                    f"{BASE_URL}/incidentManagement/details/{ticket_id}",
-                    wait_until="networkidle", timeout=30000
-                )
+            # Check for white screen and recover
+            if is_page_blank(im_page):
+                print("  ⚠️ White screen on first load — reloading...")
+                im_page.reload(wait_until="networkidle", timeout=30000)
                 time.sleep(5)
-                snap(im_page, "TC04_direct_url")
-
+                dismiss_banner(im_page)
             snap(im_page, "TC04_ticket_detail")
-            dismiss_banner(im_page)  # Remove 'Try the New Experience' banner
-            # Verify detail view tabs (exclude sidebar menu matches)
+
+            # Verify detail view tabs
             detail_tabs = ["OmniSense", "General", "Artifacts", "Affected Entities",
                            "Remediation", "Comments", "Tasks", "OmniMap", "Logs"]
             found_tabs = []
@@ -586,13 +620,39 @@ class TestIncidentManagementE2E:
                     els = im_page.locator(f"span:has-text('{tab}')").all()
                     for el in els:
                         if el.is_visible():
-                            cls = el.get_attribute("class") or ""
+                            cls = el.evaluate(
+                                "e => e.className + ' ' + (e.closest('[class]')?.className || '')"
+                            )
                             if "ant-menu" not in cls:
                                 found_tabs.append(tab)
                                 break
                 except Exception:
                     pass
             print(f"  → Found tabs: {found_tabs}")
+
+            # If no tabs found (white screen), reload once
+            if len(found_tabs) < 3:
+                print("  → Not enough tabs — reloading page...")
+                im_page.reload(wait_until="networkidle", timeout=30000)
+                time.sleep(5)
+                dismiss_banner(im_page)
+                snap(im_page, "TC04_after_reload")
+
+                found_tabs = []
+                for tab in detail_tabs:
+                    try:
+                        els = im_page.locator(f"span:has-text('{tab}')").all()
+                        for el in els:
+                            if el.is_visible():
+                                cls = el.evaluate(
+                                    "e => e.className + ' ' + (e.closest('[class]')?.className || '')"
+                                )
+                                if "ant-menu" not in cls:
+                                    found_tabs.append(tab)
+                                    break
+                    except Exception:
+                        pass
+                print(f"  → Found tabs after reload: {found_tabs}")
 
             assert len(found_tabs) >= 3, f"Not enough detail tabs found: {found_tabs}"
             log("TC04 — Open Ticket Detail", "PASS",

@@ -29,6 +29,18 @@ def parse_pytest_output(filepath, suite_name):
     results = []
     now = datetime.now()
 
+    # Collect screenshot filenames from output
+    screenshots = {}  # test_name -> filename
+    for line in text.splitlines():
+        ss_match = re.search(r'Screenshot:\s+reports/screenshots/(.+\.png)', line)
+        if ss_match:
+            ss_file = ss_match.group(1)
+            # Extract test name from filename pattern: STATUS_testname_HHMMSS.png
+            parts = ss_file.split("_", 1)
+            if len(parts) > 1:
+                test_key = parts[1].rsplit("_", 1)[0]  # remove timestamp
+                screenshots[test_key] = ss_file
+
     # Parse our custom log output: [PASS] TC01 — Navigate to IM
     lines = text.splitlines()
     for i, line in enumerate(lines):
@@ -42,11 +54,21 @@ def parse_pytest_output(filepath, suite_name):
                 next_line = lines[i + 1]
                 if next_line.startswith("       "):
                     detail = next_line.strip()
+
+            # Try to find matching screenshot
+            screenshot = ""
+            step_clean = step.lower().replace(" ", "_").replace("—", "").replace("-", "_")
+            for key, fname in screenshots.items():
+                if key in step_clean or step_clean in key:
+                    screenshot = fname
+                    break
+
             results.append({
                 "step": step,
                 "status": status,
                 "detail": detail,
                 "time": now.strftime("%H:%M:%S"),
+                "screenshot": screenshot,
             })
 
     # Fallback: parse pytest PASSED/FAILED lines

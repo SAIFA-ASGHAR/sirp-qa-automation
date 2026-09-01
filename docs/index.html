@@ -165,25 +165,32 @@ function closeScreenshot(){
 }
 document.addEventListener("keydown", e => { if(e.key === "Escape") closeScreenshot(); });
 
-function getScreenshotUrl(step, status, runId){
-  if(status !== "FAIL") return null;
-  /* Build possible screenshot filenames from the test step name */
+function getScreenshotUrl(step, status){
+  /* Build screenshot filename matching conftest.py pattern: STATUS_testname_HHMMSS.png
+     Since we don't know the exact timestamp, we link to a search-friendly pattern.
+     The screenshot names use pytest's item.name which is like test_01_navigate_to_im */
   const clean = step.toLowerCase()
     .replace(/[^a-z0-9]+/g, '_')
     .replace(/^tc\d+_+/, 'test_')
     .replace(/_+$/, '');
-  return SCREENSHOT_BASE + "FAIL_" + clean + ".png";
+  return SCREENSHOT_BASE + status + "_" + clean + ".png";
 }
 
-function screenshotCell(step, status, runId){
+function screenshotCell(step, status, runId, screenshotFile){
+  /* If exact screenshot filename is in data.json, use it directly */
+  const url = screenshotFile
+    ? SCREENSHOT_BASE + screenshotFile
+    : getScreenshotUrl(step, status);
+
   if(status === "FAIL"){
-    const url = getScreenshotUrl(step, status, runId);
-    return `<a class="ss-link" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">
-      📸 View
+    return `<a class="ss-link" style="background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:#ef4444" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">
+      📸 Failure
     </a>`;
   }
   if(status === "PASS"){
-    return `<span class="ss-none">—</span>`;
+    return `<a class="ss-link" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">
+      📸 View
+    </a>`;
   }
   return `<span class="st st-run">⏳ Running</span>`;
 }
@@ -293,7 +300,7 @@ function renderSuiteDetail(suiteKey){
           <td><span class="tdot" style="background:${r.status==="PASS"?"#22c55e":"#ef4444"}"></span>${r.step}</td>
           <td style="text-align:center"><span class="st ${r.status==="PASS"?"st-pass":"st-fail"}">${r.status}</span></td>
           <td class="detail-col">${r.detail||""}</td>
-          <td style="text-align:center">${screenshotCell(r.step, r.status, run.run_id)}</td>
+          <td style="text-align:center">${screenshotCell(r.step, r.status, run.run_id, r.screenshot||"")}</td>
           <td class="time-col">${r.time||""}</td>
         </tr>`).join("")}</tbody>
       </table>
