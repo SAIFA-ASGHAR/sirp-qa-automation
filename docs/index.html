@@ -18,12 +18,18 @@ h1{font-size:26px;font-weight:700;color:#fff;margin-bottom:4px}
 .meta{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:#818cf8}
 .meta span{color:#c7d2fe;font-weight:500}
 
-.content{padding:28px 48px;max-width:1280px;margin:0 auto}
+.content{padding:28px 48px;max-width:1400px;margin:0 auto}
 
 .metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px}
 .m{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:18px 16px;text-align:center}
 .mv{font-size:30px;font-weight:700;font-family:'SF Mono','IBM Plex Mono',monospace;margin-bottom:2px}
 .ml{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1.2px;font-weight:500}
+
+.live-banner{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:14px 20px;margin-bottom:20px;display:none;align-items:center;gap:12px}
+.live-dot{width:10px;height:10px;border-radius:50%;background:#22c55e;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.live-text{font-size:13px;color:#22c55e;font-weight:500}
+.live-detail{font-size:12px;color:#94a3b8}
 
 .suites{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
 .suite{background:#1e293b;border:1px solid #334155;border-radius:10px;overflow:hidden;transition:border-color .15s}
@@ -56,9 +62,19 @@ tr:hover{background:rgba(255,255,255,.015)}
 .st{display:inline-block;padding:2px 10px;border-radius:6px;font-size:11px;font-weight:600}
 .st-pass{background:rgba(34,197,94,.1);color:#22c55e}
 .st-fail{background:rgba(239,68,68,.1);color:#ef4444}
+.st-run{background:rgba(245,158,11,.1);color:#f59e0b;animation:pulse 1.5s infinite}
 .tdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:8px;vertical-align:middle}
-.detail-col{color:#94a3b8;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.detail-col{color:#94a3b8;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .time-col{color:#64748b;font-family:'SF Mono','IBM Plex Mono',monospace;font-size:11px;text-align:right}
+
+.ss-link{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;color:#818cf8;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);cursor:pointer;text-decoration:none;transition:background .15s}
+.ss-link:hover{background:rgba(99,102,241,.2);color:#a5b4fc}
+.ss-none{font-size:11px;color:#475569}
+
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center;cursor:pointer}
+.modal-overlay.show{display:flex}
+.modal-overlay img{max-width:90%;max-height:90%;border-radius:8px;box-shadow:0 0 40px rgba(0,0,0,.5)}
+.modal-close{position:fixed;top:20px;right:24px;color:#fff;font-size:28px;cursor:pointer;z-index:1001;background:rgba(0,0,0,.5);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 
 .empty{padding:48px;text-align:center;color:#475569;font-size:14px}
 .footer{padding:20px 48px;text-align:center;color:#475569;font-size:11px;border-top:1px solid #1e293b;margin-top:12px}
@@ -90,6 +106,14 @@ tr:hover{background:rgba(255,255,255,.015)}
 </div>
 
 <div class="content">
+  <div class="live-banner" id="live-banner">
+    <div class="live-dot"></div>
+    <div>
+      <div class="live-text">Tests running...</div>
+      <div class="live-detail" id="live-detail">Checking for active run</div>
+    </div>
+  </div>
+
   <div class="metrics" id="metrics-area"></div>
   <div class="suites" id="suites-area"></div>
 
@@ -97,18 +121,25 @@ tr:hover{background:rgba(255,255,255,.015)}
   <div id="table-area"></div>
 </div>
 
+<div class="modal-overlay" id="ss-modal" onclick="closeScreenshot()">
+  <div class="modal-close" onclick="closeScreenshot()">✕</div>
+  <img id="ss-modal-img" src="" alt="Screenshot">
+</div>
+
 <div class="footer">SIRP OmniSense QA Dashboard — Auto-updated on each test run — Confidential — Internal Use Only</div>
 
 <script>
-/* ── DATA ── loaded from data.json in the same folder ── */
 let DATA = null;
-let activeTab = null;
+let activeTab = "all";  /* ← DEFAULT TO ALL RUNS */
+let autoRefreshTimer = null;
 
 const SUITE_LABELS = {
   incident_management: { name: "Incident Management", short: "IM", color: "#818cf8" },
   autonomy_automation: { name: "Autonomy Automation", short: "AUTO", color: "#38bdf8" },
   sara_ai_evaluation:  { name: "SARA AI Evaluation",  short: "SARA", color: "#a78bfa" }
 };
+
+const SCREENSHOT_BASE = "https://raw.githubusercontent.com/SAIFA-ASGHAR/sirp-qa-automation/main/reports/screenshots/";
 
 function rc(r){ return r >= 90 ? "#22c55e" : r >= 70 ? "#f59e0b" : "#ef4444"; }
 function rbg(r){ return r >= 90 ? "rgba(34,197,94,.1)" : r >= 70 ? "rgba(245,158,11,.1)" : "rgba(239,68,68,.1)"; }
@@ -122,6 +153,39 @@ function timeAgo(ts){
   const h = Math.floor(m/60);
   if(h < 24) return h + "h ago";
   return Math.floor(h/24) + "d ago";
+}
+
+function openScreenshot(url){
+  document.getElementById("ss-modal-img").src = url;
+  document.getElementById("ss-modal").classList.add("show");
+}
+function closeScreenshot(){
+  document.getElementById("ss-modal").classList.remove("show");
+  document.getElementById("ss-modal-img").src = "";
+}
+document.addEventListener("keydown", e => { if(e.key === "Escape") closeScreenshot(); });
+
+function getScreenshotUrl(step, status, runId){
+  if(status !== "FAIL") return null;
+  /* Build possible screenshot filenames from the test step name */
+  const clean = step.toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^tc\d+_+/, 'test_')
+    .replace(/_+$/, '');
+  return SCREENSHOT_BASE + "FAIL_" + clean + ".png";
+}
+
+function screenshotCell(step, status, runId){
+  if(status === "FAIL"){
+    const url = getScreenshotUrl(step, status, runId);
+    return `<a class="ss-link" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">
+      📸 View
+    </a>`;
+  }
+  if(status === "PASS"){
+    return `<span class="ss-none">—</span>`;
+  }
+  return `<span class="st st-run">⏳ Running</span>`;
 }
 
 function render(){
@@ -150,7 +214,7 @@ function render(){
     const meta = SUITE_LABELS[k] || { name: k, short: k, color: "#818cf8" };
     const r = s.last_rate || 0;
     const c = rc(r);
-    shtml += `<div class="suite">
+    shtml += `<div class="suite" onclick="activeTab='${k}';render();" style="cursor:pointer">
       <div class="sh">
         <div class="sn"><span class="dot" style="background:${r>=90?"#22c55e":r>=70?"#f59e0b":"#ef4444"}"></span>${meta.name}</div>
         <span class="badge" style="background:${rbg(r)};color:${c}">${r}%</span>
@@ -168,14 +232,12 @@ function render(){
   }
   document.getElementById("suites-area").innerHTML = shtml;
 
-  /* tabs */
-  if(!activeTab && suiteKeys.length) activeTab = suiteKeys[0];
-  let tabsHtml = suiteKeys.map(k => {
+  /* tabs — ALL RUNS FIRST */
+  let tabsHtml = `<button class="tab${activeTab==="all"?" active":""}" onclick="activeTab='all';render();">All runs</button>`;
+  tabsHtml += suiteKeys.map(k => {
     const meta = SUITE_LABELS[k] || { short: k };
     return `<button class="tab${activeTab===k?" active":""}" onclick="activeTab='${k}';render();">${meta.name}</button>`;
   }).join("");
-  /* add "All runs" tab */
-  tabsHtml += `<button class="tab${activeTab==="all"?" active":""}" onclick="activeTab='all';render();">All runs</button>`;
   document.getElementById("tabs-area").innerHTML = tabsHtml;
 
   /* table content */
@@ -190,6 +252,9 @@ function render(){
   if(latest){
     document.getElementById("last-run-meta").innerHTML = `Last updated: <span>${latest.date} ${latest.time}</span>`;
   }
+
+  /* live banner */
+  checkLiveRun();
 }
 
 function renderSuiteDetail(suiteKey){
@@ -197,7 +262,7 @@ function renderSuiteDetail(suiteKey){
   const area = document.getElementById("table-area");
 
   if(!runs.length){
-    area.innerHTML = `<div class="empty">No test runs recorded for this suite yet. Run your tests and push results to see data here.</div>`;
+    area.innerHTML = `<div class="empty">No test runs recorded for this suite yet.</div>`;
     return;
   }
 
@@ -216,17 +281,19 @@ function renderSuiteDetail(suiteKey){
       </div>
       <table>
         <thead><tr>
-          <th style="width:40px">#</th>
+          <th style="width:36px">#</th>
           <th>Test case</th>
-          <th style="width:80px;text-align:center">Status</th>
+          <th style="width:72px;text-align:center">Status</th>
           <th>Detail</th>
-          <th style="width:70px;text-align:right">Time</th>
+          <th style="width:90px;text-align:center">Evidence</th>
+          <th style="width:66px;text-align:right">Time</th>
         </tr></thead>
         <tbody>${run.results.map((r,i) => `<tr>
           <td style="color:#64748b;text-align:center;font-size:12px">${i+1}</td>
           <td><span class="tdot" style="background:${r.status==="PASS"?"#22c55e":"#ef4444"}"></span>${r.step}</td>
           <td style="text-align:center"><span class="st ${r.status==="PASS"?"st-pass":"st-fail"}">${r.status}</span></td>
           <td class="detail-col">${r.detail||""}</td>
+          <td style="text-align:center">${screenshotCell(r.step, r.status, run.run_id)}</td>
           <td class="time-col">${r.time||""}</td>
         </tr>`).join("")}</tbody>
       </table>
@@ -259,7 +326,7 @@ function renderAllRuns(){
   }).join("");
 
   area.innerHTML = `<div class="card">
-    <div class="ch"><div class="ch-title">All test runs</div></div>
+    <div class="ch"><div class="ch-title">All test runs</div><div class="ch-meta">${runs.length} runs total</div></div>
     <table>
       <thead><tr><th>Suite</th><th>Date</th><th>Time</th><th>Passed</th><th>Failed</th><th>Rate</th><th style="text-align:right">Duration</th></tr></thead>
       <tbody>${rows}</tbody>
@@ -267,16 +334,54 @@ function renderAllRuns(){
   </div>`;
 }
 
+/* ── LIVE RUN DETECTION ── */
+/* Polls data.json every 30 seconds. If the latest run timestamp is within
+   the last 10 minutes, shows the live banner. This gives a near-real-time
+   feel — as each suite finishes it pushes data.json and the dashboard
+   picks it up on the next poll cycle. */
+function checkLiveRun(){
+  const banner = document.getElementById("live-banner");
+  const detail = document.getElementById("live-detail");
+  if(!DATA || !DATA.runs || !DATA.runs.length){ banner.style.display = "none"; return; }
+
+  const latest = DATA.runs[DATA.runs.length - 1];
+  const age = Date.now() - new Date(latest.timestamp).getTime();
+  const fiveMin = 5 * 60 * 1000;
+
+  if(age < fiveMin){
+    banner.style.display = "flex";
+    const suite = SUITE_LABELS[latest.suite]?.name || latest.suite;
+    detail.textContent = `${suite} completed ${timeAgo(latest.timestamp)} — ${latest.passed}/${latest.total} passed`;
+  } else {
+    banner.style.display = "none";
+  }
+}
+
+function startAutoRefresh(){
+  /* Poll data.json every 30 seconds for live updates */
+  autoRefreshTimer = setInterval(async () => {
+    try {
+      const resp = await fetch("data.json?" + Date.now());
+      if(!resp.ok) return;
+      const newData = await resp.json();
+      /* Only re-render if data actually changed */
+      if(JSON.stringify(newData) !== JSON.stringify(DATA)){
+        DATA = newData;
+        render();
+      }
+    } catch(e){}
+  }, 30000);
+}
+
 /* ── Load data ── */
 fetch("data.json?" + Date.now())
   .then(r => { if(!r.ok) throw new Error(); return r.json(); })
-  .then(d => { DATA = d; render(); })
+  .then(d => { DATA = d; render(); startAutoRefresh(); })
   .catch(() => {
     document.getElementById("table-area").innerHTML =
       `<div class="empty">
         <p style="font-size:18px;margin-bottom:8px">No test data yet</p>
-        <p>Run your test suites, update <code style="background:#334155;padding:2px 8px;border-radius:4px;font-size:12px">docs/data.json</code>, and push to GitHub.</p>
-        <p style="margin-top:8px">The dashboard will auto-populate.</p>
+        <p>Run your test suites and the dashboard will update automatically.</p>
       </div>`;
   });
 </script>
