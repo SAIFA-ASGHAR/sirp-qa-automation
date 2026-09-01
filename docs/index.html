@@ -165,34 +165,92 @@ function closeScreenshot(){
 }
 document.addEventListener("keydown", e => { if(e.key === "Escape") closeScreenshot(); });
 
-function getScreenshotUrl(step, status){
-  /* Build screenshot filename matching conftest.py pattern: STATUS_testname_HHMMSS.png
-     Since we don't know the exact timestamp, we link to a search-friendly pattern.
-     The screenshot names use pytest's item.name which is like test_01_navigate_to_im */
-  const clean = step.toLowerCase()
-    .replace(/[^a-z0-9]+/g, '_')
-    .replace(/^tc\d+_+/, 'test_')
-    .replace(/_+$/, '');
-  return SCREENSHOT_BASE + status + "_" + clean + ".png";
+/* Map of step names to pytest function names for screenshot lookup */
+const STEP_TO_TEST = {
+  "TC01": "test_01_navigate_to_im",
+  "TC02": "test_02_verify_grid_tabs",
+  "TC03": "test_03_create_ticket",
+  "TC04": "test_04_open_ticket_detail",
+  "TC05": "test_05_general_tab",
+  "TC06": "test_06_omnisense_assist_mode",
+  "TC07": "test_07_run_enrichment_agent",
+  "TC08": "test_08_run_classification_agent",
+  "TC09": "test_09_autonomous_mode",
+  "TC10": "test_10_artifacts_tab_loads",
+  "TC11": "test_11_add_artifact",
+  "TC12": "test_12_add_comment",
+  "TC13": "test_13_tasks_tab",
+  "TC14": "test_14_affected_entities_tab",
+  "TC15": "test_15_remediation_tab",
+  "TC16": "test_16_omnimap_tab",
+  "TC17": "test_17_logs_tab",
+  "TC18": "test_18_context_panel",
+};
+
+/* Screenshot index: populated from data.json screenshot fields or
+   from the repo's screenshots folder listing */
+let SCREENSHOT_INDEX = {};
+
+function findScreenshot(step, status){
+  /* Try exact match from data.json screenshot field first */
+  /* Then try matching by test number from STEP_TO_TEST map */
+  const tcMatch = step.match(/TC(\d+)/);
+  if(tcMatch){
+    const tcKey = "TC" + tcMatch[1].padStart(2,"0");
+    const testName = STEP_TO_TEST[tcKey];
+    if(testName){
+      /* Check if we have an indexed screenshot for this test */
+      const key = status + "_" + testName;
+      if(SCREENSHOT_INDEX[key]) return SCREENSHOT_BASE + SCREENSHOT_INDEX[key];
+      /* Fallback: construct a pattern-based search URL
+         We'll try the GitHub repo file browser as fallback */
+    }
+  }
+  return null;
 }
 
 function screenshotCell(step, status, runId, screenshotFile){
-  /* If exact screenshot filename is in data.json, use it directly */
-  const url = screenshotFile
-    ? SCREENSHOT_BASE + screenshotFile
-    : getScreenshotUrl(step, status);
+  /* If exact screenshot filename is in data.json, use it */
+  if(screenshotFile){
+    const url = SCREENSHOT_BASE + screenshotFile;
+    const label = status === "FAIL" ? "Failure" : "View";
+    const style = status === "FAIL"
+      ? "background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:#ef4444"
+      : "";
+    return `<a class="ss-link" style="${style}" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">📸 ${label}</a>`;
+  }
 
-  if(status === "FAIL"){
-    return `<a class="ss-link" style="background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:#ef4444" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">
-      📸 Failure
-    </a>`;
+  /* Try finding from index */
+  const indexed = findScreenshot(step, status);
+  if(indexed){
+    const label = status === "FAIL" ? "Failure" : "View";
+    const style = status === "FAIL"
+      ? "background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:#ef4444"
+      : "";
+    return `<a class="ss-link" style="${style}" href="${indexed}" target="_blank" onclick="event.preventDefault();openScreenshot('${indexed}')">📸 ${label}</a>`;
   }
-  if(status === "PASS"){
-    return `<a class="ss-link" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">
-      📸 View
-    </a>`;
-  }
-  return `<span class="st st-run">⏳ Running</span>`;
+
+  /* No screenshot available */
+  return `<span class="ss-none">—</span>`;
+}
+
+/* Load screenshot index from GitHub API */
+async function loadScreenshotIndex(){
+  try{
+    const resp = await fetch("https://api.github.com/repos/SAIFA-ASGHAR/sirp-qa-automation/contents/reports/screenshots");
+    if(!resp.ok) return;
+    const files = await resp.json();
+    for(const f of files){
+      if(!f.name.endsWith(".png")) continue;
+      /* Parse: FAIL_test_01_navigate_to_im_103254.png */
+      const m = f.name.match(/^(PASS|FAIL)_(test_.+?)_\d{6}\.png$/);
+      if(m){
+        const key = m[1] + "_" + m[2];
+        /* Keep latest (last in alphabetical order = latest timestamp) */
+        SCREENSHOT_INDEX[key] = f.name;
+      }
+    }
+  } catch(e){}
 }
 
 function render(){
@@ -383,7 +441,7 @@ function startAutoRefresh(){
 /* ── Load data ── */
 fetch("data.json?" + Date.now())
   .then(r => { if(!r.ok) throw new Error(); return r.json(); })
-  .then(d => { DATA = d; render(); startAutoRefresh(); })
+  .then(async d => { DATA = d; await loadScreenshotIndex(); render(); startAutoRefresh(); })
   .catch(() => {
     document.getElementById("table-area").innerHTML =
       `<div class="empty">
