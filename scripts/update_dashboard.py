@@ -8,8 +8,11 @@ Runs automatically in GitHub Actions after tests complete.
 import json
 import re
 import os
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
+
+# PKT = UTC+5 (Pakistan Standard Time)
+PKT = timezone(timedelta(hours=5))
 
 DOCS_DATA = Path("docs/data.json")
 REPORTS_DIR = Path("reports")
@@ -27,7 +30,7 @@ def parse_pytest_output(filepath, suite_name):
         return None
 
     results = []
-    now = datetime.now()
+    now = datetime.now(PKT)
 
     # Collect screenshot filenames from output
     screenshots = {}  # test_name -> filename
