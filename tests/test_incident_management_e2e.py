@@ -78,9 +78,12 @@ def dismiss_banner(page):
 
 
 def apply_zoom(page):
-    """Set page zoom to 75%. Call AFTER page content has loaded."""
+    """Set page zoom to 75% and stretch body to fill full viewport."""
     try:
-        page.evaluate("document.body.style.zoom = '0.75'")
+        page.evaluate("""() => {
+            document.body.style.zoom = '0.75';
+            document.body.style.minHeight = '134vh';
+        }""")
     except Exception:
         pass
 
