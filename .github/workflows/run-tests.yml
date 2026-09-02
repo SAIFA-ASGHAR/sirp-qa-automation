@@ -59,6 +59,9 @@ jobs:
           python -m pytest tests/test_autonomy_automation_e2e.py -v -s 2>&1 | tee reports/autonomy_output.txt || true
 
       - name: Update dashboard
+        env:
+          RUN_TRIGGERED_BY: ${{ github.actor }}
+          RUN_TRIGGER_EVENT: ${{ github.event_name }}
         run: python scripts/update_dashboard.py
 
       - name: Push dashboard update

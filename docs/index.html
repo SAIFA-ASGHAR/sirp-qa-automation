@@ -336,7 +336,7 @@ function renderSuiteDetail(suiteKey){
     const c = rc(run.pass_rate);
     html += `<div class="card">
       <div class="ch">
-        <div class="ch-title">Run: ${run.date} ${run.time}</div>
+        <div class="ch-title">Run: ${run.date} ${run.time}${run.triggered_by ? ` <span style="font-size:12px;color:#94a3b8;font-weight:400;margin-left:12px">by ${run.triggered_by}</span>` : ""}</div>
         <div class="ch-meta">
           <span style="color:#22c55e;font-weight:600">${run.passed} passed</span> &nbsp;
           ${run.failed > 0 ? `<span style="color:#ef4444;font-weight:600">${run.failed} failed</span> &nbsp;` : ""}
@@ -379,10 +379,13 @@ function renderAllRuns(){
   let rows = runs.map(r => {
     const meta = SUITE_LABELS[r.suite] || { name: r.suite };
     const c = rc(r.pass_rate);
+    const actor = r.triggered_by || "—";
+    const event = r.trigger_event === "push" ? "🔄" : r.trigger_event === "workflow_dispatch" ? "▶️" : "";
     return `<tr style="cursor:pointer" onclick="activeTab='${r.suite}';render();">
       <td><span style="color:${SUITE_LABELS[r.suite]?.color||"#818cf8"};font-weight:600">${meta.name}</span></td>
       <td>${r.date}</td>
       <td>${r.time}</td>
+      <td style="color:#94a3b8;font-size:12px">${event} ${actor}</td>
       <td style="color:#22c55e;font-weight:500">${r.passed}</td>
       <td style="color:${r.failed>0?"#ef4444":"#22c55e"};font-weight:500">${r.failed}</td>
       <td><span class="badge" style="background:${rbg(r.pass_rate)};color:${c}">${r.pass_rate}%</span></td>
@@ -393,7 +396,7 @@ function renderAllRuns(){
   area.innerHTML = `<div class="card">
     <div class="ch"><div class="ch-title">All test runs</div><div class="ch-meta">${runs.length} runs total</div></div>
     <table>
-      <thead><tr><th>Suite</th><th>Date</th><th>Time</th><th>Passed</th><th>Failed</th><th>Rate</th><th style="text-align:right">Duration</th></tr></thead>
+      <thead><tr><th>Suite</th><th>Date</th><th>Time</th><th>Triggered by</th><th>Passed</th><th>Failed</th><th>Rate</th><th style="text-align:right">Duration</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>
   </div>`;

@@ -120,6 +120,8 @@ def parse_pytest_output(filepath, suite_name):
         "failed": failed,
         "pass_rate": round((passed / total) * 100, 1) if total else 0,
         "environment": "demo3.sirp.io",
+        "triggered_by": os.environ.get("RUN_TRIGGERED_BY", "local"),
+        "trigger_event": os.environ.get("RUN_TRIGGER_EVENT", "manual"),
         "results": results,
     }
 
