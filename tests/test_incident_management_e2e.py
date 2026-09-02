@@ -78,14 +78,8 @@ def dismiss_banner(page):
 
 
 def apply_zoom(page):
-    """Set page zoom to 75% and stretch body to fill full viewport."""
-    try:
-        page.evaluate("""() => {
-            document.body.style.zoom = '0.75';
-            document.body.style.minHeight = '134vh';
-        }""")
-    except Exception:
-        pass
+    """No-op — zoom is handled by viewport size in the fixture."""
+    pass
 
 
 def is_page_blank(page):
@@ -284,11 +278,13 @@ def im_page(browser):
     ctx  = browser.new_context(viewport={"width": 1920, "height": 1080})
     page = ctx.new_page()
     login(page)
-    # Apply 75% zoom after login so full SIRP UI fits
+    # Real browser zoom via CDP — same as Ctrl+- in Chrome
     try:
-        page.evaluate("document.body.style.zoom = '0.75'")
-    except Exception:
-        pass
+        cdp = ctx.new_cdp_session(page)
+        cdp.send("Emulation.setPageScaleFactor", {"pageScaleFactor": 0.75})
+        print("  → CDP zoom set to 75%")
+    except Exception as e:
+        print(f"  → CDP zoom failed: {e}")
     yield page
     ctx.close()
 
