@@ -4,100 +4,132 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SIRP QA Dashboard — OmniSense Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','IBM Plex Sans',sans-serif;background:#0f172a;color:#e5e7eb;line-height:1.5}
+body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;background:#0d1117;color:#c9d1d9;line-height:1.5}
+code,pre,.mono{font-family:'IBM Plex Mono',monospace}
 
-.header{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 40%,#1e40af 100%);padding:36px 48px;position:relative;overflow:hidden}
-.header::after{content:'';position:absolute;top:-50%;right:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(142,45,255,.12) 0%,transparent 70%);pointer-events:none}
-.header-row{display:flex;justify-content:space-between;align-items:flex-start}
-.logo{font-size:11px;color:#a5b4fc;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:12px}
-.env{font-size:11px;color:#818cf8;background:rgba(99,102,241,.15);padding:5px 14px;border-radius:8px;border:1px solid rgba(99,102,241,.2)}
-h1{font-size:26px;font-weight:700;color:#fff;margin-bottom:4px}
-.sub{color:#a5b4fc;font-size:13px;margin-bottom:12px}
-.meta{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;color:#818cf8}
-.meta span{color:#c7d2fe;font-weight:500}
+/* ── SIRP Top Bar ─── */
+.topbar{background:#161b22;border-bottom:1px solid #21262d;padding:12px 32px;display:flex;justify-content:space-between;align-items:center}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.sirp-logo{font-family:'DM Sans',sans-serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:1px}
+.sirp-logo span{color:#8e2dff}
+.org-badge{font-size:11px;color:#8b949e;background:#21262d;padding:5px 14px;border-radius:6px;border:1px solid #30363d}
+.nav-pills{display:flex;gap:6px}
+.nav-pill{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:none;color:#8b949e;background:transparent;transition:all .15s}
+.nav-pill:hover{color:#c9d1d9;background:#21262d}
+.nav-pill.active{background:#8e2dff;color:#fff}
 
-.content{padding:28px 48px;max-width:1400px;margin:0 auto}
+/* ── Header ─── */
+.header{background:linear-gradient(135deg,#0d1117 0%,#161b22 50%,#1a1040 100%);padding:32px 32px 28px;border-bottom:1px solid #21262d}
+.header h1{font-size:22px;font-weight:700;color:#fff;margin-bottom:2px}
+.header .sub{color:#8b949e;font-size:13px;margin-bottom:12px}
+.meta-row{display:flex;gap:20px;font-size:12px;color:#484f58;flex-wrap:wrap}
+.meta-row span{color:#8b949e;font-weight:500}
 
-.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px}
-.m{background:#1e293b;border:1px solid #334155;border-radius:10px;padding:18px 16px;text-align:center}
-.mv{font-size:30px;font-weight:700;font-family:'SF Mono','IBM Plex Mono',monospace;margin-bottom:2px}
-.ml{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1.2px;font-weight:500}
+.content{padding:24px 32px;max-width:1400px;margin:0 auto}
 
-.live-banner{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:14px 20px;margin-bottom:20px;display:none;align-items:center;gap:12px}
-.live-dot{width:10px;height:10px;border-radius:50%;background:#22c55e;animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
-.live-text{font-size:13px;color:#22c55e;font-weight:500}
-.live-detail{font-size:12px;color:#94a3b8}
+/* ── Metrics ─── */
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
+.m{background:#161b22;border:1px solid #21262d;border-radius:8px;padding:16px;text-align:center}
+.mv{font-size:28px;font-weight:700;font-family:'IBM Plex Mono',monospace;margin-bottom:2px}
+.ml{font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:1.5px;font-weight:600}
 
-.suites{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
-.suite{background:#1e293b;border:1px solid #334155;border-radius:10px;overflow:hidden;transition:border-color .15s}
-.suite:hover{border-color:#4f46e5}
-.sh{padding:16px 20px;background:#1a2332;border-bottom:1px solid #334155;display:flex;justify-content:space-between;align-items:center}
-.sn{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+/* ── Live Banner ─── */
+.live-banner{border:1px solid #21262d;border-radius:8px;padding:12px 20px;margin-bottom:20px;display:none;align-items:center;gap:12px}
+.live-banner.running{background:rgba(210,153,34,.06);border-color:rgba(210,153,34,.3)}
+.live-banner.completed{background:rgba(63,185,80,.06);border-color:rgba(63,185,80,.3)}
+.live-dot{width:8px;height:8px;border-radius:50%;animation:pulse 1.5s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+.live-text{font-size:13px;font-weight:600}
+.live-detail{font-size:12px;color:#8b949e}
+
+/* ── Suite Cards ─── */
+.suites{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.suite{background:#161b22;border:1px solid #21262d;border-radius:8px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.suite:hover{border-color:#8e2dff}
+.sh{padding:14px 18px;border-bottom:1px solid #21262d;display:flex;justify-content:space-between;align-items:center}
+.sn{font-size:14px;font-weight:600;color:#e6edf3;display:flex;align-items:center;gap:8px}
 .sn .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.badge{font-size:12px;padding:3px 12px;border-radius:8px;font-weight:600}
-.sc{padding:16px 20px}
-.stats{display:flex;gap:20px;font-size:13px;color:#94a3b8;margin-bottom:10px}
+.badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600;font-family:'IBM Plex Mono',monospace}
+.sc{padding:14px 18px}
+.stats{display:flex;gap:18px;font-size:12px;color:#8b949e;margin-bottom:8px}
 .stats b{font-weight:600}
-.bar{height:6px;background:#334155;border-radius:3px;overflow:hidden;margin-bottom:8px}
-.bar-fill{height:6px;border-radius:3px;transition:width .4s}
-.stime{font-size:11px;color:#64748b}
+.bar{height:4px;background:#21262d;border-radius:2px;overflow:hidden;margin-bottom:6px}
+.bar-fill{height:4px;border-radius:2px;transition:width .4s}
+.stime{font-size:11px;color:#484f58}
 
-.tabs{display:flex;gap:4px;margin-bottom:20px;background:#1e293b;border-radius:8px;padding:4px;border:1px solid #334155}
-.tab{padding:8px 20px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;color:#94a3b8;transition:all .15s;border:none;background:none}
-.tab:hover{color:#e5e7eb}
-.tab.active{background:#334155;color:#fff}
+/* ── Tabs ─── */
+.tabs{display:flex;gap:4px;margin-bottom:20px}
+.tab{padding:7px 18px;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;border:none;color:#8b949e;background:#161b22;border:1px solid #21262d;transition:all .15s}
+.tab:hover{color:#c9d1d9;border-color:#30363d}
+.tab.active{background:#8e2dff;color:#fff;border-color:#8e2dff}
 
-.card{background:#1e293b;border:1px solid #334155;border-radius:10px;overflow:hidden;margin-bottom:24px}
-.ch{padding:14px 20px;background:#1a2332;border-bottom:1px solid #334155;display:flex;justify-content:space-between;align-items:center}
-.ch-title{font-size:14px;font-weight:600}
-.ch-meta{font-size:12px;color:#64748b}
+/* ── Cards & Tables ─── */
+.card{background:#161b22;border:1px solid #21262d;border-radius:8px;overflow:hidden;margin-bottom:20px}
+.ch{padding:12px 18px;border-bottom:1px solid #21262d;display:flex;justify-content:space-between;align-items:center}
+.ch-title{font-size:13px;font-weight:600;color:#e6edf3}
+.ch-meta{font-size:11px;color:#484f58}
 
 table{width:100%;border-collapse:collapse}
-th{padding:10px 16px;text-align:left;font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1.2px;font-weight:600;background:rgba(0,0,0,.15);border-bottom:1px solid #334155}
-td{padding:10px 16px;border-bottom:1px solid rgba(51,65,85,.5);font-size:13px}
-tr:hover{background:rgba(255,255,255,.015)}
-.st{display:inline-block;padding:2px 10px;border-radius:6px;font-size:11px;font-weight:600}
-.st-pass{background:rgba(34,197,94,.1);color:#22c55e}
-.st-fail{background:rgba(239,68,68,.1);color:#ef4444}
-.st-run{background:rgba(245,158,11,.1);color:#f59e0b;animation:pulse 1.5s infinite}
+th{padding:8px 16px;text-align:left;font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;background:#0d1117;border-bottom:1px solid #21262d}
+td{padding:10px 16px;border-bottom:1px solid #161b22;font-size:13px;color:#c9d1d9}
+tr:hover{background:rgba(142,45,255,.03)}
+
+.st{display:inline-block;padding:2px 10px;border-radius:12px;font-size:10px;font-weight:600;font-family:'IBM Plex Mono',monospace;text-transform:uppercase}
+.st-pass{background:rgba(63,185,80,.12);color:#3fb950}
+.st-fail{background:rgba(248,81,73,.12);color:#f85149}
 .tdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:8px;vertical-align:middle}
-.detail-col{color:#94a3b8;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.time-col{color:#64748b;font-family:'SF Mono','IBM Plex Mono',monospace;font-size:11px;text-align:right}
+.detail-col{color:#8b949e;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.time-col{color:#484f58;font-family:'IBM Plex Mono',monospace;font-size:11px;text-align:right}
 
-.ss-link{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;color:#818cf8;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);cursor:pointer;text-decoration:none;transition:background .15s}
-.ss-link:hover{background:rgba(99,102,241,.2);color:#a5b4fc}
-.ss-none{font-size:11px;color:#475569}
+/* ── Screenshot Links ─── */
+.ss-link{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:600;cursor:pointer;text-decoration:none;transition:all .15s;font-family:'IBM Plex Mono',monospace}
+.ss-pass{color:#3fb950;background:rgba(63,185,80,.1);border:1px solid rgba(63,185,80,.2)}
+.ss-pass:hover{background:rgba(63,185,80,.2)}
+.ss-fail{color:#f85149;background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.2)}
+.ss-fail:hover{background:rgba(248,81,73,.2)}
+.ss-none{font-size:11px;color:#30363d}
 
-.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.8);z-index:1000;align-items:center;justify-content:center;cursor:pointer}
+/* ── Screenshot Modal ─── */
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center;cursor:pointer}
 .modal-overlay.show{display:flex}
-.modal-overlay img{max-width:90%;max-height:90%;border-radius:8px;box-shadow:0 0 40px rgba(0,0,0,.5)}
-.modal-close{position:fixed;top:20px;right:24px;color:#fff;font-size:28px;cursor:pointer;z-index:1001;background:rgba(0,0,0,.5);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.modal-overlay img{max-width:92%;max-height:92%;border-radius:8px;border:1px solid #30363d}
+.modal-close{position:fixed;top:16px;right:20px;color:#c9d1d9;font-size:24px;cursor:pointer;z-index:1001;background:#21262d;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:1px solid #30363d}
 
-.empty{padding:48px;text-align:center;color:#475569;font-size:14px}
-.footer{padding:20px 48px;text-align:center;color:#475569;font-size:11px;border-top:1px solid #1e293b;margin-top:12px}
+.empty{padding:48px;text-align:center;color:#484f58;font-size:13px}
+.footer{padding:16px 32px;text-align:center;color:#30363d;font-size:11px;border-top:1px solid #161b22;margin-top:12px}
 
 @media(max-width:900px){
   .metrics{grid-template-columns:repeat(2,1fr)}
   .suites{grid-template-columns:1fr}
-  .content,.header{padding-left:20px;padding-right:20px}
+  .content,.topbar,.header{padding-left:16px;padding-right:16px}
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-row">
-    <div>
-      <div class="logo">SIRP Platform — OmniSense QA</div>
-      <h1>QA Automation Dashboard</h1>
-      <div class="sub">Regression suite status across all modules</div>
+<!-- SIRP Top Bar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="sirp-logo">
+      <svg width="80" height="28" viewBox="0 0 80 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="24" height="24" rx="6" y="2" fill="#8e2dff"/>
+        <path d="M16.5 9.5C16.5 9.5 14.5 7.5 12 7.5C9.5 7.5 8 9 8 10.5C8 12 9 13 12 13.5C15 14 16.5 15 16.5 17C16.5 19 14.5 20.5 12 20.5C9.5 20.5 7.5 18.5 7.5 18.5" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        <text x="30" y="19" fill="white" font-family="DM Sans,sans-serif" font-size="17" font-weight="700" letter-spacing="0.5">sirp</text>
+      </svg>
     </div>
-    <div class="env">demo3.sirp.io</div>
+    <span style="color:#30363d">|</span>
+    <span style="font-size:12px;color:#8b949e;font-weight:500">OmniSense QA</span>
   </div>
-  <div class="meta">
+  <div style="font-size:11px;color:#484f58">demo3.sirp.io</div>
+</div>
+
+<div class="header">
+  <h1>QA Automation Dashboard</h1>
+  <div class="sub">Regression suite status across all modules</div>
+  <div class="meta-row">
     <div>Environment: <span>demo3.sirp.io</span></div>
     <div>Framework: <span>Playwright + pytest</span></div>
     <div>Prepared by: <span>Saifa — QA Engineer</span></div>
@@ -107,16 +139,15 @@ tr:hover{background:rgba(255,255,255,.015)}
 
 <div class="content">
   <div class="live-banner" id="live-banner">
-    <div class="live-dot"></div>
+    <div class="live-dot" id="live-dot"></div>
     <div>
       <div class="live-text" id="live-title">Run completed</div>
-      <div class="live-detail" id="live-detail">Checking for active run</div>
+      <div class="live-detail" id="live-detail"></div>
     </div>
   </div>
 
   <div class="metrics" id="metrics-area"></div>
   <div class="suites" id="suites-area"></div>
-
   <div class="tabs" id="tabs-area"></div>
   <div id="table-area"></div>
 </div>
@@ -126,23 +157,34 @@ tr:hover{background:rgba(255,255,255,.015)}
   <img id="ss-modal-img" src="" alt="Screenshot">
 </div>
 
-<div class="footer">SIRP OmniSense QA Dashboard — Auto-updated on each test run — Confidential — Internal Use Only</div>
+<div class="footer">SIRP OmniSense Platform — QA Automation Dashboard — Confidential — Internal Use Only</div>
 
 <script>
 let DATA = null;
-let activeTab = "all";  /* ← DEFAULT TO ALL RUNS */
-let autoRefreshTimer = null;
+let activeTab = "all";
+let isRunning = false;
 
 const SUITE_LABELS = {
-  incident_management: { name: "Incident Management", short: "IM", color: "#818cf8" },
-  autonomy_automation: { name: "Autonomy Automation", short: "AUTO", color: "#38bdf8" },
-  sara_ai_evaluation:  { name: "SARA AI Evaluation",  short: "SARA", color: "#a78bfa" }
+  incident_management: { name: "Incident Management", short: "IM", color: "#8e2dff" },
+  autonomy_automation: { name: "Autonomy Automation", short: "AUTO", color: "#58a6ff" },
+  sara_ai_evaluation:  { name: "SARA AI Evaluation",  short: "SARA", color: "#bc8cff" }
 };
 
 const SCREENSHOT_BASE = "https://raw.githubusercontent.com/SAIFA-ASGHAR/sirp-qa-automation/main/reports/screenshots/";
 
-function rc(r){ return r >= 90 ? "#22c55e" : r >= 70 ? "#f59e0b" : "#ef4444"; }
-function rbg(r){ return r >= 90 ? "rgba(34,197,94,.1)" : r >= 70 ? "rgba(245,158,11,.1)" : "rgba(239,68,68,.1)"; }
+const STEP_TO_TEST = {
+  "TC01":"test_01_navigate_to_im","TC02":"test_02_verify_grid_tabs","TC03":"test_03_create_ticket",
+  "TC04":"test_04_open_ticket_detail","TC05":"test_05_general_tab","TC06":"test_06_omnisense_assist_mode",
+  "TC07":"test_07_run_enrichment_agent","TC08":"test_08_run_classification_agent","TC09":"test_09_autonomous_mode",
+  "TC10":"test_10_artifacts_tab","TC11":"test_11_add_artifact","TC12":"test_12_add_comment",
+  "TC13":"test_13_tasks_tab","TC14":"test_14_affected_entities_tab","TC15":"test_15_remediation_tab",
+  "TC16":"test_16_omnimap_tab","TC17":"test_17_logs_tab","TC18":"test_18_context_panel",
+};
+
+let SCREENSHOT_INDEX = {};
+
+function rc(r){ return r >= 90 ? "#3fb950" : r >= 70 ? "#d29922" : "#f85149"; }
+function rbg(r){ return r >= 90 ? "rgba(63,185,80,.12)" : r >= 70 ? "rgba(210,153,34,.12)" : "rgba(248,81,73,.12)"; }
 
 function timeAgo(ts){
   if(!ts) return "";
@@ -155,109 +197,43 @@ function timeAgo(ts){
   return Math.floor(h/24) + "d ago";
 }
 
-function openScreenshot(url){
-  document.getElementById("ss-modal-img").src = url;
-  document.getElementById("ss-modal").classList.add("show");
-}
-function closeScreenshot(){
-  document.getElementById("ss-modal").classList.remove("show");
-  document.getElementById("ss-modal-img").src = "";
-}
-document.addEventListener("keydown", e => { if(e.key === "Escape") closeScreenshot(); });
-
-/* Map of step names to pytest function names for screenshot lookup */
-const STEP_TO_TEST = {
-  "TC01": "test_01_navigate_to_im",
-  "TC02": "test_02_verify_grid_tabs",
-  "TC03": "test_03_create_ticket",
-  "TC04": "test_04_open_ticket_detail",
-  "TC05": "test_05_general_tab",
-  "TC06": "test_06_omnisense_assist_mode",
-  "TC07": "test_07_run_enrichment_agent",
-  "TC08": "test_08_run_classification_agent",
-  "TC09": "test_09_autonomous_mode",
-  "TC10": "test_10_artifacts_tab_loads",
-  "TC11": "test_11_add_artifact",
-  "TC12": "test_12_add_comment",
-  "TC13": "test_13_tasks_tab",
-  "TC14": "test_14_affected_entities_tab",
-  "TC15": "test_15_remediation_tab",
-  "TC16": "test_16_omnimap_tab",
-  "TC17": "test_17_logs_tab",
-  "TC18": "test_18_context_panel",
-};
-
-/* Screenshot index: populated from data.json screenshot fields or
-   from the repo's screenshots folder listing */
-let SCREENSHOT_INDEX = {};
+function openScreenshot(url){ document.getElementById("ss-modal-img").src=url; document.getElementById("ss-modal").classList.add("show"); }
+function closeScreenshot(){ document.getElementById("ss-modal").classList.remove("show"); document.getElementById("ss-modal-img").src=""; }
+document.addEventListener("keydown", e => { if(e.key==="Escape") closeScreenshot(); });
 
 function findScreenshot(step, status){
-  /* Try exact match from data.json screenshot field first */
-  /* Then try matching by test number from STEP_TO_TEST map */
   const tcMatch = step.match(/TC(\d+)/);
   if(tcMatch){
     const tcKey = "TC" + tcMatch[1].padStart(2,"0");
     const testName = STEP_TO_TEST[tcKey];
     if(testName){
-      /* Check if we have an indexed screenshot for this test */
       const key = status + "_" + testName;
       if(SCREENSHOT_INDEX[key]) return SCREENSHOT_BASE + SCREENSHOT_INDEX[key];
-      /* Fallback: construct a pattern-based search URL
-         We'll try the GitHub repo file browser as fallback */
     }
   }
   return null;
 }
 
 function screenshotCell(step, status, runId, screenshotFile){
-  /* If exact screenshot filename is in data.json, use it */
   if(screenshotFile){
     const url = SCREENSHOT_BASE + screenshotFile;
+    const cls = status === "FAIL" ? "ss-fail" : "ss-pass";
     const label = status === "FAIL" ? "Failure" : "View";
-    const style = status === "FAIL"
-      ? "background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:#ef4444"
-      : "";
-    return `<a class="ss-link" style="${style}" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">📸 ${label}</a>`;
+    return `<a class="ss-link ${cls}" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">📸 ${label}</a>`;
   }
-
-  /* Try finding from index */
   const indexed = findScreenshot(step, status);
   if(indexed){
+    const cls = status === "FAIL" ? "ss-fail" : "ss-pass";
     const label = status === "FAIL" ? "Failure" : "View";
-    const style = status === "FAIL"
-      ? "background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:#ef4444"
-      : "";
-    return `<a class="ss-link" style="${style}" href="${indexed}" target="_blank" onclick="event.preventDefault();openScreenshot('${indexed}')">📸 ${label}</a>`;
+    return `<a class="ss-link ${cls}" href="${indexed}" target="_blank" onclick="event.preventDefault();openScreenshot('${indexed}')">📸 ${label}</a>`;
   }
-
-  /* No screenshot available */
   return `<span class="ss-none">—</span>`;
-}
-
-/* Load screenshot index from GitHub API */
-async function loadScreenshotIndex(){
-  try{
-    const resp = await fetch("https://api.github.com/repos/SAIFA-ASGHAR/sirp-qa-automation/contents/reports/screenshots");
-    if(!resp.ok) return;
-    const files = await resp.json();
-    for(const f of files){
-      if(!f.name.endsWith(".png")) continue;
-      /* Parse: FAIL_test_01_navigate_to_im_103254.png */
-      const m = f.name.match(/^(PASS|FAIL)_(test_.+?)_\d{6}\.png$/);
-      if(m){
-        const key = m[1] + "_" + m[2];
-        /* Keep latest (last in alphabetical order = latest timestamp) */
-        SCREENSHOT_INDEX[key] = f.name;
-      }
-    }
-  } catch(e){}
 }
 
 function render(){
   if(!DATA || !DATA.suites) return;
   const suiteKeys = Object.keys(DATA.suites);
 
-  /* metrics */
   const totalTC = suiteKeys.reduce((a,k) => a + (DATA.suites[k].last_total||0), 0);
   const totalP  = suiteKeys.reduce((a,k) => a + (DATA.suites[k].last_passed||0), 0);
   const totalF  = suiteKeys.reduce((a,k) => a + (DATA.suites[k].last_failed||0), 0);
@@ -265,29 +241,28 @@ function render(){
   const runs    = (DATA.runs||[]).length;
 
   document.getElementById("metrics-area").innerHTML = [
-    ["Total tests", totalTC, "#e5e7eb"],
+    ["Total tests", totalTC, "#e6edf3"],
     ["Pass rate", rate + "%", rc(rate)],
-    ["Passed", totalP, "#22c55e"],
-    ["Failed", totalF, totalF > 0 ? "#ef4444" : "#22c55e"],
-    ["Total runs", runs, "#818cf8"],
+    ["Passed", totalP, "#3fb950"],
+    ["Failed", totalF, totalF > 0 ? "#f85149" : "#3fb950"],
+    ["Total runs", runs, "#8e2dff"],
   ].map(([l,v,c]) => `<div class="m"><div class="mv" style="color:${c}">${v}</div><div class="ml">${l}</div></div>`).join("");
 
-  /* suite cards */
   let shtml = "";
   for(const k of suiteKeys){
     const s = DATA.suites[k];
-    const meta = SUITE_LABELS[k] || { name: k, short: k, color: "#818cf8" };
+    const meta = SUITE_LABELS[k] || { name: k, short: k, color: "#8e2dff" };
     const r = s.last_rate || 0;
     const c = rc(r);
-    shtml += `<div class="suite" onclick="activeTab='${k}';render();" style="cursor:pointer">
+    shtml += `<div class="suite" onclick="activeTab='${k}';render();">
       <div class="sh">
-        <div class="sn"><span class="dot" style="background:${r>=90?"#22c55e":r>=70?"#f59e0b":"#ef4444"}"></span>${meta.name}</div>
+        <div class="sn"><span class="dot" style="background:${c}"></span>${meta.name}</div>
         <span class="badge" style="background:${rbg(r)};color:${c}">${r}%</span>
       </div>
       <div class="sc">
         <div class="stats">
-          <span><b style="color:#22c55e">${s.last_passed||0}</b> passed</span>
-          <span><b style="color:${(s.last_failed||0)>0?"#ef4444":"#22c55e"}">${s.last_failed||0}</b> failed</span>
+          <span><b style="color:#3fb950">${s.last_passed||0}</b> passed</span>
+          <span><b style="color:${(s.last_failed||0)>0?"#f85149":"#3fb950"}">${s.last_failed||0}</b> failed</span>
           <span>${s.last_total||0} total</span>
         </div>
         <div class="bar"><div class="bar-fill" style="width:${r}%;background:${c}"></div></div>
@@ -297,7 +272,6 @@ function render(){
   }
   document.getElementById("suites-area").innerHTML = shtml;
 
-  /* tabs — ALL RUNS FIRST */
   let tabsHtml = `<button class="tab${activeTab==="all"?" active":""}" onclick="activeTab='all';render();">All runs</button>`;
   tabsHtml += suiteKeys.map(k => {
     const meta = SUITE_LABELS[k] || { short: k };
@@ -305,57 +279,40 @@ function render(){
   }).join("");
   document.getElementById("tabs-area").innerHTML = tabsHtml;
 
-  /* table content */
-  if(activeTab === "all"){
-    renderAllRuns();
-  } else {
-    renderSuiteDetail(activeTab);
-  }
+  if(activeTab === "all") renderAllRuns(); else renderSuiteDetail(activeTab);
 
-  /* header meta */
   const latest = (DATA.runs||[])[(DATA.runs||[]).length - 1];
-  if(latest){
-    document.getElementById("last-run-meta").innerHTML = `Last updated: <span>${latest.date} ${latest.time}</span>`;
-  }
-
-  /* live banner */
+  if(latest) document.getElementById("last-run-meta").innerHTML = `Last updated: <span>${latest.date} ${latest.time}</span>`;
   checkLiveRun();
 }
 
 function renderSuiteDetail(suiteKey){
   const runs = (DATA.runs||[]).filter(r => r.suite === suiteKey).slice().reverse();
   const area = document.getElementById("table-area");
-
-  if(!runs.length){
-    area.innerHTML = `<div class="empty">No test runs recorded for this suite yet.</div>`;
-    return;
-  }
+  if(!runs.length){ area.innerHTML = `<div class="empty">No test runs recorded for this suite yet.</div>`; return; }
 
   let html = "";
   for(const run of runs){
     const c = rc(run.pass_rate);
+    const actor = run.triggered_by ? ` <span style="font-size:11px;color:#8b949e;font-weight:400;margin-left:8px">by ${run.triggered_by}</span>` : "";
     html += `<div class="card">
       <div class="ch">
-        <div class="ch-title">Run: ${run.date} ${run.time}${run.triggered_by ? ` <span style="font-size:12px;color:#94a3b8;font-weight:400;margin-left:12px">by ${run.triggered_by}</span>` : ""}</div>
+        <div class="ch-title">Run: ${run.date} ${run.time}${actor}</div>
         <div class="ch-meta">
-          <span style="color:#22c55e;font-weight:600">${run.passed} passed</span> &nbsp;
-          ${run.failed > 0 ? `<span style="color:#ef4444;font-weight:600">${run.failed} failed</span> &nbsp;` : ""}
-          <span class="badge" style="background:${rbg(run.pass_rate)};color:${c};margin-left:8px">${run.pass_rate}%</span>
-          &nbsp; <span style="color:#64748b">${Math.round(run.duration_s)}s</span>
+          <span style="color:#3fb950;font-weight:600">${run.passed} passed</span> &nbsp;
+          ${run.failed > 0 ? `<span style="color:#f85149;font-weight:600">${run.failed} failed</span> &nbsp;` : ""}
+          <span class="badge" style="background:${rbg(run.pass_rate)};color:${c}">${run.pass_rate}%</span>
+          &nbsp; <span style="color:#484f58">${Math.round(run.duration_s)}s</span>
         </div>
       </div>
       <table>
         <thead><tr>
-          <th style="width:36px">#</th>
-          <th>Test case</th>
-          <th style="width:72px;text-align:center">Status</th>
-          <th>Detail</th>
-          <th style="width:90px;text-align:center">Evidence</th>
-          <th style="width:66px;text-align:right">Time</th>
+          <th style="width:36px">#</th><th>Test case</th><th style="width:72px;text-align:center">Status</th>
+          <th>Detail</th><th style="width:90px;text-align:center">Evidence</th><th style="width:66px;text-align:right">Time</th>
         </tr></thead>
         <tbody>${run.results.map((r,i) => `<tr>
-          <td style="color:#64748b;text-align:center;font-size:12px">${i+1}</td>
-          <td><span class="tdot" style="background:${r.status==="PASS"?"#22c55e":"#ef4444"}"></span>${r.step}</td>
+          <td style="color:#484f58;text-align:center;font-size:12px;font-family:'IBM Plex Mono',monospace">${i+1}</td>
+          <td><span class="tdot" style="background:${r.status==="PASS"?"#3fb950":"#f85149"}"></span>${r.step}</td>
           <td style="text-align:center"><span class="st ${r.status==="PASS"?"st-pass":"st-fail"}">${r.status}</span></td>
           <td class="detail-col">${r.detail||""}</td>
           <td style="text-align:center">${screenshotCell(r.step, r.status, run.run_id, r.screenshot||"")}</td>
@@ -370,11 +327,7 @@ function renderSuiteDetail(suiteKey){
 function renderAllRuns(){
   const runs = (DATA.runs||[]).slice().reverse();
   const area = document.getElementById("table-area");
-
-  if(!runs.length){
-    area.innerHTML = `<div class="empty">No runs yet.</div>`;
-    return;
-  }
+  if(!runs.length){ area.innerHTML = `<div class="empty">No runs yet.</div>`; return; }
 
   let rows = runs.map(r => {
     const meta = SUITE_LABELS[r.suite] || { name: r.suite };
@@ -382,12 +335,12 @@ function renderAllRuns(){
     const actor = r.triggered_by || "—";
     const event = r.trigger_event === "push" ? "🔄" : r.trigger_event === "workflow_dispatch" ? "▶️" : "";
     return `<tr style="cursor:pointer" onclick="activeTab='${r.suite}';render();">
-      <td><span style="color:${SUITE_LABELS[r.suite]?.color||"#818cf8"};font-weight:600">${meta.name}</span></td>
+      <td><span style="color:${SUITE_LABELS[r.suite]?.color||"#8e2dff"};font-weight:600">${meta.name}</span></td>
       <td>${r.date}</td>
-      <td>${r.time}</td>
-      <td style="color:#94a3b8;font-size:12px">${event} ${actor}</td>
-      <td style="color:#22c55e;font-weight:500">${r.passed}</td>
-      <td style="color:${r.failed>0?"#ef4444":"#22c55e"};font-weight:500">${r.failed}</td>
+      <td class="mono" style="color:#8b949e">${r.time}</td>
+      <td style="color:#8b949e;font-size:12px">${event} ${actor}</td>
+      <td style="color:#3fb950;font-weight:600">${r.passed}</td>
+      <td style="color:${r.failed>0?"#f85149":"#3fb950"};font-weight:600">${r.failed}</td>
       <td><span class="badge" style="background:${rbg(r.pass_rate)};color:${c}">${r.pass_rate}%</span></td>
       <td class="time-col">${Math.round(r.duration_s)}s</td>
     </tr>`;
@@ -402,20 +355,12 @@ function renderAllRuns(){
   </div>`;
 }
 
-/* ── LIVE RUN DETECTION ── */
-/* Polls data.json every 30 seconds. If the latest run timestamp is within
-   the last 10 minutes, shows the live banner. This gives a near-real-time
-   feel — as each suite finishes it pushes data.json and the dashboard
-   picks it up on the next poll cycle. */
-let isRunning = false;
-
 async function checkLiveRun(){
   const banner = document.getElementById("live-banner");
   const detail = document.getElementById("live-detail");
   const title = document.getElementById("live-title");
-  const dot = document.querySelector(".live-dot");
+  const dot = document.getElementById("live-dot");
 
-  /* Step 1: Check GitHub Actions for an active workflow run */
   try {
     const resp = await fetch("https://api.github.com/repos/SAIFA-ASGHAR/sirp-qa-automation/actions/runs?status=in_progress&per_page=1");
     if(resp.ok){
@@ -423,19 +368,18 @@ async function checkLiveRun(){
       if(data.workflow_runs && data.workflow_runs.length > 0){
         const run = data.workflow_runs[0];
         banner.style.display = "flex";
+        banner.className = "live-banner running";
         title.textContent = "Tests running...";
-        title.style.color = "#f59e0b";
-        dot.style.background = "#f59e0b";
+        title.style.color = "#d29922";
+        dot.style.background = "#d29922";
         const actor = run.actor?.login || "unknown";
-        const started = timeAgo(run.created_at);
-        detail.textContent = `Triggered by ${actor} — started ${started}`;
+        detail.textContent = `Triggered by ${actor} — started ${timeAgo(run.created_at)}`;
         isRunning = true;
         return;
       }
     }
   } catch(e){}
 
-  /* Step 2: If no active run, check if a run just completed */
   isRunning = false;
   if(!DATA || !DATA.runs || !DATA.runs.length){ banner.style.display = "none"; return; }
 
@@ -445,8 +389,9 @@ async function checkLiveRun(){
 
   if(age < fiveMin){
     banner.style.display = "flex";
+    banner.className = "live-banner completed";
     const suite = SUITE_LABELS[latest.suite]?.name || latest.suite;
-    const rateColor = latest.pass_rate >= 90 ? "#22c55e" : latest.pass_rate >= 70 ? "#f59e0b" : "#ef4444";
+    const rateColor = rc(latest.pass_rate);
     title.textContent = "Run completed";
     title.style.color = rateColor;
     dot.style.background = rateColor;
@@ -458,34 +403,36 @@ async function checkLiveRun(){
 }
 
 function startAutoRefresh(){
-  /* Poll every 15 seconds for live run detection, data.json every 30s */
-  setInterval(async () => {
-    checkLiveRun();
-  }, 15000);
-
+  setInterval(() => { checkLiveRun(); }, 15000);
   setInterval(async () => {
     try {
       const resp = await fetch("data.json?" + Date.now());
       if(!resp.ok) return;
       const newData = await resp.json();
-      if(JSON.stringify(newData) !== JSON.stringify(DATA)){
-        DATA = newData;
-        render();
-      }
+      if(JSON.stringify(newData) !== JSON.stringify(DATA)){ DATA = newData; render(); }
     } catch(e){}
   }, 30000);
 }
 
-/* ── Load data ── */
+async function loadScreenshotIndex(){
+  try{
+    const resp = await fetch("https://api.github.com/repos/SAIFA-ASGHAR/sirp-qa-automation/contents/reports/screenshots");
+    if(!resp.ok) return;
+    const files = await resp.json();
+    for(const f of files){
+      if(!f.name.endsWith(".png")) continue;
+      const m = f.name.match(/^(PASS|FAIL)_(test_.+?)_\d{6}\.png$/);
+      if(m) SCREENSHOT_INDEX[m[1] + "_" + m[2]] = f.name;
+    }
+  } catch(e){}
+}
+
 fetch("data.json?" + Date.now())
   .then(r => { if(!r.ok) throw new Error(); return r.json(); })
   .then(async d => { DATA = d; await loadScreenshotIndex(); render(); startAutoRefresh(); })
   .catch(() => {
     document.getElementById("table-area").innerHTML =
-      `<div class="empty">
-        <p style="font-size:18px;margin-bottom:8px">No test data yet</p>
-        <p>Run your test suites and the dashboard will update automatically.</p>
-      </div>`;
+      `<div class="empty"><p style="font-size:16px;margin-bottom:8px">No test data yet</p><p>Run your test suites and the dashboard will update automatically.</p></div>`;
   });
 </script>
 </body>
