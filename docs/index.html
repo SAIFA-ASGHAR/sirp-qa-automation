@@ -109,7 +109,7 @@ tr:hover{background:rgba(255,255,255,.015)}
   <div class="live-banner" id="live-banner">
     <div class="live-dot"></div>
     <div>
-      <div class="live-text">Tests running...</div>
+      <div class="live-text" id="live-title">Run completed</div>
       <div class="live-detail" id="live-detail">Checking for active run</div>
     </div>
   </div>
@@ -407,9 +407,36 @@ function renderAllRuns(){
    the last 10 minutes, shows the live banner. This gives a near-real-time
    feel — as each suite finishes it pushes data.json and the dashboard
    picks it up on the next poll cycle. */
-function checkLiveRun(){
+let isRunning = false;
+
+async function checkLiveRun(){
   const banner = document.getElementById("live-banner");
   const detail = document.getElementById("live-detail");
+  const title = document.getElementById("live-title");
+  const dot = document.querySelector(".live-dot");
+
+  /* Step 1: Check GitHub Actions for an active workflow run */
+  try {
+    const resp = await fetch("https://api.github.com/repos/SAIFA-ASGHAR/sirp-qa-automation/actions/runs?status=in_progress&per_page=1");
+    if(resp.ok){
+      const data = await resp.json();
+      if(data.workflow_runs && data.workflow_runs.length > 0){
+        const run = data.workflow_runs[0];
+        banner.style.display = "flex";
+        title.textContent = "Tests running...";
+        title.style.color = "#f59e0b";
+        dot.style.background = "#f59e0b";
+        const actor = run.actor?.login || "unknown";
+        const started = timeAgo(run.created_at);
+        detail.textContent = `Triggered by ${actor} — started ${started}`;
+        isRunning = true;
+        return;
+      }
+    }
+  } catch(e){}
+
+  /* Step 2: If no active run, check if a run just completed */
+  isRunning = false;
   if(!DATA || !DATA.runs || !DATA.runs.length){ banner.style.display = "none"; return; }
 
   const latest = DATA.runs[DATA.runs.length - 1];
@@ -419,20 +446,28 @@ function checkLiveRun(){
   if(age < fiveMin){
     banner.style.display = "flex";
     const suite = SUITE_LABELS[latest.suite]?.name || latest.suite;
-    detail.textContent = `${suite} completed ${timeAgo(latest.timestamp)} — ${latest.passed}/${latest.total} passed`;
+    const rateColor = latest.pass_rate >= 90 ? "#22c55e" : latest.pass_rate >= 70 ? "#f59e0b" : "#ef4444";
+    title.textContent = "Run completed";
+    title.style.color = rateColor;
+    dot.style.background = rateColor;
+    const actor = latest.triggered_by ? ` by ${latest.triggered_by}` : "";
+    detail.textContent = `${suite} — ${latest.passed}/${latest.total} passed (${latest.pass_rate}%)${actor} — ${timeAgo(latest.timestamp)}`;
   } else {
     banner.style.display = "none";
   }
 }
 
 function startAutoRefresh(){
-  /* Poll data.json every 30 seconds for live updates */
-  autoRefreshTimer = setInterval(async () => {
+  /* Poll every 15 seconds for live run detection, data.json every 30s */
+  setInterval(async () => {
+    checkLiveRun();
+  }, 15000);
+
+  setInterval(async () => {
     try {
       const resp = await fetch("data.json?" + Date.now());
       if(!resp.ok) return;
       const newData = await resp.json();
-      /* Only re-render if data actually changed */
       if(JSON.stringify(newData) !== JSON.stringify(DATA)){
         DATA = newData;
         render();
