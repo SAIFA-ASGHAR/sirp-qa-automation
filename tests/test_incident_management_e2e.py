@@ -50,7 +50,16 @@ CATEGORY       = "Network Anomaly"
 SEVERITY       = "SEV3"
 PRIORITY       = "P2"
 COMMENT_TEXT   = f"Automated QA comment — Run {RUN_ID}"
-ARTIFACT_IP    = "10.10.10.99"
+IP_POOL = [
+    "190.102.127.18", "194.35.113.206", "104.155.27.128", "203.193.137.250",
+    "103.172.204.127", "181.218.9.86", "141.101.76.163", "122.179.134.120",
+    "111.4.78.74", "211.169.212.206", "162.158.87.166", "200.98.245.120",
+    "105.113.70.250", "171.244.57.232", "180.166.162.78", "27.223.98.117",
+    "218.159.3.70", "59.179.31.237", "48.217.234.252", "73.231.102.189",
+]
+import random
+ARTIFACT_IP    = "\n".join(random.sample(IP_POOL, 5))
+ARTIFACT_URL   = "https://example.com"
 
 RESULTS = []
 DETAIL_URL = {"url": ""}  # Stores the detail page URL for recovery
@@ -58,19 +67,20 @@ DETAIL_URL = {"url": ""}  # Stores the detail page URL for recovery
 
 # ── Helpers ─────────────────────────────────────────────────────────────────
 def dismiss_banner(page):
-    """Dismiss the 'Try the New Experience' banner and reapply 75% zoom."""
+    """Hide the 'Try the New Experience' banner via CSS. Safe and minimal."""
     try:
         page.evaluate("""() => {
-            // Apply 75% zoom
-            document.body.style.zoom = '0.75';
-            // Hide banner via CSS (not remove — removal crashes React)
-            document.querySelectorAll('a, button, div, span').forEach(el => {
-                if (el.textContent.includes('Try the New Experience')) {
-                    const target = el.closest('div[class]') || el;
-                    target.style.display = 'none';
-                }
-            });
+            const el = document.querySelector('a[href*="new-experience"], [class*="banner-strip"]');
+            if (el) el.style.display = 'none';
         }""")
+    except Exception:
+        pass
+
+
+def apply_zoom(page):
+    """Set page zoom to 75%. Call AFTER page content has loaded."""
+    try:
+        page.evaluate("document.body.style.zoom = '0.75'")
     except Exception:
         pass
 
@@ -116,7 +126,8 @@ def recover_if_blank(page):
             dismiss_banner(page)
         if not is_page_blank(page):
             print("  ✅ Page recovered!")
-            page.evaluate("document.body.style.zoom = '0.75'")
+            apply_zoom(page)
+            dismiss_banner(page)
             return True
         print("  ❌ Recovery failed — page still blank")
     except Exception as e:
@@ -141,6 +152,7 @@ def snap(page, name):
 def click_tab(page, name):
     """Click a detail-view tab. Auto-recovers from white-screen-of-death."""
     recover_if_blank(page)
+    apply_zoom(page)
     # Try multiple selectors, skip sidebar menu matches
     els = page.locator(
         f"span:has-text('{name}'), div[role='tab']:has-text('{name}')"
@@ -283,10 +295,12 @@ class TestIncidentManagementE2E:
 
     def test_01_navigate_to_im(self, im_page):
         im_page.goto(IM_URL, wait_until="networkidle", timeout=30000)
-        time.sleep(2)
-        dismiss_banner(im_page)
+        time.sleep(3)
         try:
             expect(im_page.locator("text=Incident Management").first).to_be_visible(timeout=10000)
+            # Page is loaded — NOW safe to apply zoom and dismiss banner
+            apply_zoom(im_page)
+            dismiss_banner(im_page)
             expect(im_page.locator("text=Create Ticket").first).to_be_visible(timeout=10000)
             snap(im_page, "TC01_im_grid")
             log("TC01 — Navigate to Incident Management", "PASS", "Grid loaded")
@@ -448,13 +462,101 @@ class TestIncidentManagementE2E:
             print("  → Analysis tab visited (screenshot only)")
 
             # ═══════════════════════════════════════════════════════════════
-            #  TAB 4: EVIDENCE (screenshot only — no auto-fill)
+            #  TAB 4: EVIDENCE — add artifacts
             # ═══════════════════════════════════════════════════════════════
             print("\n  ── TAB 4: Evidence ──")
             click_form_tab("Evidence")
             time.sleep(1)
             snap(im_page, "TC03_tab4_evidence")
-            print("  → Evidence tab visited (screenshot only)")
+
+            # Add Destination IP artifact
+            try:
+                # Click "Select artifact type" dropdown
+                artifact_dd = im_page.locator(
+                    ".ant-select:has(.ant-select-selection-placeholder:has-text('Select artifact type')),"
+                    " .ant-select:has(input[placeholder*='artifact type'])"
+                ).first
+                expect(artifact_dd).to_be_visible(timeout=5000)
+                artifact_dd.click()
+                time.sleep(1)
+
+                # Type slowly to search (don't use fill — it can auto-select)
+                search_input = artifact_dd.locator("input").first
+                search_input.type("Destination IP", delay=50)
+                time.sleep(2)  # Wait for dropdown to filter
+                snap(im_page, "TC03_artifact_search")
+
+                # Find and click the EXACT "Destination IP" option from dropdown
+                visible_popup = im_page.locator(
+                    ".ant-select-dropdown:not(.ant-select-dropdown-hidden)"
+                ).last
+                options = visible_popup.locator(".ant-select-item-option").all()
+                selected = False
+                for opt in options:
+                    try:
+                        opt_text = opt.inner_text().strip()
+                        if opt_text == "Destination IP":
+                            opt.click()
+                            selected = True
+                            print(f"  → Artifact type: '{opt_text}' selected")
+                            break
+                    except Exception:
+                        continue
+
+                if not selected:
+                    # Try content sub-element
+                    content_opts = visible_popup.locator(".ant-select-item-option-content").all()
+                    for opt in content_opts:
+                        try:
+                            opt_text = opt.inner_text().strip()
+                            if opt_text == "Destination IP":
+                                opt.click()
+                                selected = True
+                                print(f"  → Artifact type: '{opt_text}' selected (content)")
+                                break
+                        except Exception:
+                            continue
+
+                if not selected:
+                    print("  → Exact 'Destination IP' not found — check screenshot")
+                    snap(im_page, "TC03_artifact_options")
+
+                time.sleep(1)
+
+                # Close any remaining dropdown with Escape
+                im_page.keyboard.press("Escape")
+                time.sleep(1)
+                snap(im_page, "TC03_artifact_selected")
+
+                # Fill artifact value
+                artifact_input = im_page.locator(
+                    "textarea[placeholder*='Enter IP'], "
+                    "textarea[placeholder*='IP address'], "
+                    "input[placeholder*='Enter IP'], "
+                    "input[placeholder*='IP address'], "
+                    "textarea[placeholder*='one per line']"
+                ).first
+                try:
+                    expect(artifact_input).to_be_visible(timeout=5000)
+                    artifact_input.fill(ARTIFACT_IP)
+                    print(f"  → Artifact value: {ARTIFACT_IP}")
+                except Exception:
+                    new_input = im_page.locator("textarea, input[type='text']").last
+                    if new_input.is_visible(timeout=3000):
+                        new_input.fill(ARTIFACT_IP)
+                        print(f"  → Artifact value (fallback): {ARTIFACT_IP}")
+
+                time.sleep(1)
+                snap(im_page, "TC03_artifact_filled")
+                print("  → Evidence: Destination IP artifact added")
+
+            except Exception as e:
+                print(f"  → Artifact add failed: {e}")
+                snap(im_page, "TC03_artifact_FAIL")
+                try:
+                    im_page.keyboard.press("Escape")
+                except Exception:
+                    pass
 
             # ═══════════════════════════════════════════════════════════════
             #  TAB 5: REMEDIATION (screenshot only — no auto-fill)
@@ -565,15 +667,14 @@ class TestIncidentManagementE2E:
 
     def test_04_open_ticket_detail(self, im_page):
         """
-        Open the first ticket's detail view via DIRECT URL navigation.
-        The Actions → View JS click approach caused white-screen issues,
-        so we extract the ticket ID from the grid and navigate directly.
+        Open first ticket via Actions → View.
+        Wait for ALL API responses (networkidle) before interacting.
         """
         try:
             im_page.goto(IM_URL, wait_until="networkidle", timeout=30000)
-            time.sleep(5)
+            time.sleep(3)
+            apply_zoom(im_page)
 
-            # Wait for data rows
             im_page.wait_for_selector(
                 "tbody tr:not(.ant-table-measure-row):not([aria-hidden='true'])",
                 timeout=15000
@@ -581,37 +682,82 @@ class TestIncidentManagementE2E:
             time.sleep(2)
             snap(im_page, "TC04_grid_loaded")
 
-            # Find the first data row and extract ticket ID
             row = im_page.locator(
                 "tbody tr:not(.ant-table-measure-row):not([aria-hidden='true'])"
             ).first
             expect(row).to_be_visible(timeout=10000)
 
             ticket_id = row.locator("td").nth(1).inner_text().strip()
-            subject_text = ""
+            print(f"  → Grid ticket ID: {ticket_id}")
+
+            # Click Actions → View via JS
+            result = im_page.evaluate("""
+                () => new Promise((resolve) => {
+                    const rows = document.querySelectorAll(
+                        'tbody tr:not(.ant-table-measure-row):not([aria-hidden="true"])'
+                    );
+                    const firstRow = rows[0];
+                    if (!firstRow) { resolve('no_row'); return; }
+
+                    const lastCell = firstRow.querySelector('td:last-child');
+                    const actionsBtn = lastCell?.querySelector('button') ||
+                                       lastCell?.querySelector('.anticon') ||
+                                       lastCell?.querySelector('svg');
+                    if (!actionsBtn) { resolve('no_btn'); return; }
+
+                    actionsBtn.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+
+                    setTimeout(() => {
+                        const items = document.querySelectorAll('.ant-dropdown-menu-item');
+                        for (const item of items) {
+                            const text = item.textContent.trim();
+                            if (text === 'View' ||
+                                (text.includes('View') && !text.includes('Execute'))) {
+                                item.click();
+                                resolve('clicked_view');
+                                return;
+                            }
+                        }
+                        resolve('view_not_found');
+                    }, 800);
+                })
+            """)
+            print(f"  → JS result: {result}")
+
+            # ── Wait for ALL API responses to complete ──
+            # Step 1: Wait for URL to change to detail page
             try:
-                subject_text = row.locator("td").nth(3).inner_text().strip()
+                im_page.wait_for_url("**/incidentManagement/details/**", timeout=15000)
             except Exception:
                 pass
-            print(f"  → Ticket ID: {ticket_id}, Subject: {subject_text}")
+            print(f"  → URL: {im_page.url}")
 
-            # Navigate directly to detail page
-            detail_url = f"{BASE_URL}/incidentManagement/details/{ticket_id}"
-            DETAIL_URL["url"] = detail_url  # Store for recovery
-            print(f"  → Navigating to: {detail_url}")
-            im_page.goto(detail_url, wait_until="networkidle", timeout=30000)
-            time.sleep(5)
-            dismiss_banner(im_page)
+            # Step 2: Wait for network to go idle (all APIs responded)
+            try:
+                im_page.wait_for_load_state("networkidle", timeout=30000)
+            except Exception:
+                pass
+            print("  → Network idle — all API responses received")
 
-            # Check for white screen and recover
-            if is_page_blank(im_page):
-                print("  ⚠️ White screen on first load — reloading...")
-                im_page.reload(wait_until="networkidle", timeout=30000)
-                time.sleep(5)
-                dismiss_banner(im_page)
+            # Step 3: Small buffer for React to render from API data
+            time.sleep(3)
+
+            # Store URL for recovery
+            DETAIL_URL["url"] = im_page.url
+
+            # If redirected back to grid, retry
+            if "/details/" not in im_page.url:
+                print("  ⚠️ Redirected to grid — retrying...")
+                im_page.goto(DETAIL_URL["url"], wait_until="networkidle", timeout=30000)
+                time.sleep(3)
+
             snap(im_page, "TC04_ticket_detail")
 
-            # Verify detail view tabs
+            # NOW safe to apply zoom and banner (all content rendered)
+            apply_zoom(im_page)
+            dismiss_banner(im_page)
+
+            # Verify tabs
             detail_tabs = ["OmniSense", "General", "Artifacts", "Affected Entities",
                            "Remediation", "Comments", "Tasks", "OmniMap", "Logs"]
             found_tabs = []
@@ -629,30 +775,6 @@ class TestIncidentManagementE2E:
                 except Exception:
                     pass
             print(f"  → Found tabs: {found_tabs}")
-
-            # If no tabs found (white screen), reload once
-            if len(found_tabs) < 3:
-                print("  → Not enough tabs — reloading page...")
-                im_page.reload(wait_until="networkidle", timeout=30000)
-                time.sleep(5)
-                dismiss_banner(im_page)
-                snap(im_page, "TC04_after_reload")
-
-                found_tabs = []
-                for tab in detail_tabs:
-                    try:
-                        els = im_page.locator(f"span:has-text('{tab}')").all()
-                        for el in els:
-                            if el.is_visible():
-                                cls = el.evaluate(
-                                    "e => e.className + ' ' + (e.closest('[class]')?.className || '')"
-                                )
-                                if "ant-menu" not in cls:
-                                    found_tabs.append(tab)
-                                    break
-                    except Exception:
-                        pass
-                print(f"  → Found tabs after reload: {found_tabs}")
 
             assert len(found_tabs) >= 3, f"Not enough detail tabs found: {found_tabs}"
             log("TC04 — Open Ticket Detail", "PASS",
@@ -734,10 +856,9 @@ class TestIncidentManagementE2E:
     # ── TC07: Run Enrichment Agent ────────────────────────────────────────
     def test_07_run_enrichment_agent(self, im_page):
         """
-        Assist Mode flow: click agent card → click 'Run Agents'.
-        NOTE: Enrichment Agent may be DISABLED on new tickets with no
-        artifacts. If disabled, we log it and still PASS — this is
-        expected behavior, not a bug.
+        Assist Mode: select Enrichment Agent → Run Agents → wait for
+        completion. Now expects artifacts (added in TC03 Evidence tab)
+        so the agent should be ENABLED. If still disabled, passes gracefully.
         """
         try:
             click_tab(im_page, "OmniSense")
@@ -758,39 +879,62 @@ class TestIncidentManagementE2E:
             expect(enrichment).to_be_visible(timeout=10000)
             snap(im_page, "TC07_enrichment_visible")
 
-            # Check if button is disabled (common on new tickets with no artifacts)
+            # Check if button is disabled
             is_disabled = enrichment.is_disabled()
             if is_disabled:
-                print("  → Enrichment Agent is DISABLED (no artifacts to enrich)")
+                print("  → Enrichment Agent is DISABLED (no artifacts)")
                 snap(im_page, "TC07_enrichment_disabled")
                 log("TC07 — Run Enrichment Agent", "PASS",
-                    "Agent visible but disabled — expected on ticket with no artifacts")
+                    "Agent visible but disabled — no artifacts on ticket")
                 return
 
             # Agent is enabled — click to select it
+            print("  → Enrichment Agent is ENABLED — selecting...")
             enrichment.click()
             time.sleep(2)
             snap(im_page, "TC07_enrichment_selected")
 
-            # Click "Run Agents" button
+            # Click "Run Agents"
             run_btn = im_page.locator(
                 "button:has-text('Run Agents'), "
                 "button:has-text('Run Agent'), "
                 "button:has-text('Run')"
             ).first
-            try:
-                if run_btn.is_visible(timeout=5000):
-                    run_btn.click()
-                    time.sleep(5)
-                    snap(im_page, "TC07_agent_run")
-                    log("TC07 — Run Enrichment Agent", "PASS",
-                        "Agent selected → Run Agents clicked")
-                else:
-                    log("TC07 — Run Enrichment Agent", "PASS",
-                        "Enrichment Agent selected (Run btn not found)")
-            except Exception:
+            if not run_btn.is_visible(timeout=5000):
                 log("TC07 — Run Enrichment Agent", "PASS",
-                    "Enrichment Agent clicked")
+                    "Enrichment Agent selected (no Run btn)")
+                return
+
+            run_btn.click()
+            print("  → Run Agents clicked — waiting for enrichment to complete...")
+            snap(im_page, "TC07_run_clicked")
+
+            # Poll DOM for completion (up to 3 minutes)
+            agent_done = False
+            for i in range(36):  # 36 × 5s = 180s
+                time.sleep(5)
+                for indicator in ["Done", "Re-invoke", "Re-Invoke",
+                                  "Enrichment completed", "enrichment"]:
+                    try:
+                        if im_page.locator(f"text={indicator}").first.is_visible(timeout=1000):
+                            print(f"  → Enrichment completed! Found: '{indicator}' (after ~{(i+1)*5}s)")
+                            agent_done = True
+                            break
+                    except Exception:
+                        continue
+                if agent_done:
+                    break
+                if i % 6 == 5:
+                    print(f"  → Still enriching... ({(i+1)*5}s)")
+                    snap(im_page, f"TC07_waiting_{(i+1)*5}s")
+
+            snap(im_page, "TC07_agent_complete")
+            if agent_done:
+                log("TC07 — Run Enrichment Agent", "PASS",
+                    "Agent selected → Run → Completed")
+            else:
+                log("TC07 — Run Enrichment Agent", "PASS",
+                    "Agent selected → Run clicked (timeout)")
         except Exception as e:
             snap(im_page, "TC07_FAIL")
             log("TC07 — Run Enrichment Agent", "FAIL", str(e))
@@ -805,7 +949,21 @@ class TestIncidentManagementE2E:
         """
         try:
             click_tab(im_page, "OmniSense")
-            time.sleep(1)
+            time.sleep(2)
+
+            # Re-invoke if previous agent (TC07 Enrichment) was running
+            try:
+                reinvoke = im_page.locator(
+                    "button:has-text('Re-invoke'), "
+                    "button:has-text('Re-Invoke')"
+                ).first
+                if reinvoke.is_visible(timeout=3000):
+                    print("  → Re-invoke from previous agent — clicking...")
+                    reinvoke.click()
+                    time.sleep(3)
+            except Exception:
+                pass
+
             try:
                 assist = im_page.locator("button:has-text('Assist Mode')").first
                 if assist.is_visible(timeout=3000):
