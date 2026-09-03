@@ -167,6 +167,14 @@ const SUITE_LABELS = {
 
 const SCREENSHOT_BASE = "https://raw.githubusercontent.com/SAIFA-ASGHAR/sirp-qa-automation/main/reports/screenshots/";
 
+/* Suite key to screenshot subfolder mapping */
+const SUITE_TO_FOLDER = {
+  incident_management: "im",
+  autonomy_automation: "autonomy",
+  entities: "entities",
+  sara_ai_evaluation: "sara"
+};
+
 const STEP_TO_TEST = {
   "TC01":"test_01_navigate_to_im","TC02":"test_02_verify_grid_tabs","TC03":"test_03_create_ticket",
   "TC04":"test_04_open_ticket_detail","TC05":"test_05_general_tab","TC06":"test_06_omnisense_assist_mode",
@@ -209,19 +217,32 @@ function findScreenshot(step, status){
   return null;
 }
 
-function screenshotCell(step, status, runId, screenshotFile){
+function screenshotCell(step, status, runId, screenshotFile, suiteKey){
+  const folder = SUITE_TO_FOLDER[suiteKey] || "other";
+
   if(screenshotFile){
-    const url = SCREENSHOT_BASE + screenshotFile;
+    const url = SCREENSHOT_BASE + folder + "/" + screenshotFile;
     const cls = status === "FAIL" ? "ss-fail" : "ss-pass";
     const label = status === "FAIL" ? "Failure" : "View";
     return `<a class="ss-link ${cls}" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">📸 ${label}</a>`;
   }
-  const indexed = findScreenshot(step, status);
-  if(indexed){
-    const cls = status === "FAIL" ? "ss-fail" : "ss-pass";
-    const label = status === "FAIL" ? "Failure" : "View";
-    return `<a class="ss-link ${cls}" href="${indexed}" target="_blank" onclick="event.preventDefault();openScreenshot('${indexed}')">📸 ${label}</a>`;
+
+  /* Try finding from index */
+  const key = folder + "/" + status + "_" + step.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+  for(const [k, fname] of Object.entries(SCREENSHOT_INDEX)){
+    if(k.startsWith(folder + "/") && k.includes(status)){
+      /* Match by test number */
+      const tcMatch = step.match(/TC(\d+)/i);
+      const testMatch = fname.match(/test_(\d+)/);
+      if(tcMatch && testMatch && tcMatch[1] === testMatch[1]){
+        const url = SCREENSHOT_BASE + folder + "/" + fname;
+        const cls = status === "FAIL" ? "ss-fail" : "ss-pass";
+        const label = status === "FAIL" ? "Failure" : "View";
+        return `<a class="ss-link ${cls}" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">📸 ${label}</a>`;
+      }
+    }
   }
+
   return `<span class="ss-none">—</span>`;
 }
 
@@ -310,7 +331,7 @@ function renderSuiteDetail(suiteKey){
           <td><span class="tdot" style="background:${r.status==="PASS"?"#3fb950":"#f85149"}"></span>${r.step}</td>
           <td style="text-align:center"><span class="st ${r.status==="PASS"?"st-pass":"st-fail"}">${r.status}</span></td>
           <td class="detail-col">${r.detail||""}</td>
-          <td style="text-align:center">${screenshotCell(r.step, r.status, run.run_id, r.screenshot||"")}</td>
+          <td style="text-align:center">${screenshotCell(r.step, r.status, run.run_id, r.screenshot||"", run.suite)}</td>
           <td class="time-col">${r.time||""}</td>
         </tr>`).join("")}</tbody>
       </table>
@@ -410,16 +431,19 @@ function startAutoRefresh(){
 }
 
 async function loadScreenshotIndex(){
-  try{
-    const resp = await fetch("https://api.github.com/repos/SAIFA-ASGHAR/sirp-qa-automation/contents/reports/screenshots");
-    if(!resp.ok) return;
-    const files = await resp.json();
-    for(const f of files){
-      if(!f.name.endsWith(".png")) continue;
-      const m = f.name.match(/^(PASS|FAIL)_(test_.+?)_\d{6}\.png$/);
-      if(m) SCREENSHOT_INDEX[m[1] + "_" + m[2]] = f.name;
-    }
-  } catch(e){}
+  const folders = Object.values(SUITE_TO_FOLDER);
+  for(const folder of folders){
+    try{
+      const resp = await fetch(`https://api.github.com/repos/SAIFA-ASGHAR/sirp-qa-automation/contents/reports/screenshots/${folder}`);
+      if(!resp.ok) continue;
+      const files = await resp.json();
+      for(const f of files){
+        if(!f.name.endsWith(".png")) continue;
+        const m = f.name.match(/^(PASS|FAIL)_(test_.+?)_\d{6}\.png$/);
+        if(m) SCREENSHOT_INDEX[folder + "/" + m[1] + "_" + m[2]] = f.name;
+      }
+    } catch(e){}
+  }
 }
 
 fetch("data.json?" + Date.now())

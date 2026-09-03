@@ -5,7 +5,7 @@ Shared fixtures for SIRP QA test suites.
 
 Provides:
   - Playwright browser fixture (headed mode for debugging, headless for CI)
-  - Auto-screenshot on test failure
+  - Auto-screenshot on ALL tests (pass and fail) — saved in module subfolders
   - Report generation hook for IM E2E suite
 """
 
@@ -16,6 +16,14 @@ from playwright.sync_api import sync_playwright
 
 SCREENSHOT_DIR = Path("reports/screenshots")
 SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
+
+# Module subfolder mapping: fixture_name -> subfolder
+FIXTURE_TO_MODULE = {
+    "im_page":   "im",
+    "sara_page": "sara",
+    "auto_page": "autonomy",
+    "ent_page":  "entities",
+}
 
 
 # ── Browser fixture ─────────────────────────────────────────────────────────
@@ -36,26 +44,33 @@ def browser():
         browser.close()
 
 
-# ── Auto-screenshot on failure ──────────────────────────────────────────────
+# ── Auto-screenshot on ALL tests ────────────────────────────────────────────
 @pytest.hookimpl(hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    """Capture a screenshot whenever a test fails."""
+    """Capture a screenshot after every test — pass or fail.
+       Screenshots are saved in module-specific subfolders."""
     outcome = yield
     report = outcome.get_result()
 
     if report.when == "call":
-        # Try to find the page from the test's fixtures
+        # Find the page and determine which module
         page = None
-        for fixture_name in ["im_page", "sara_page", "auto_page", "ent_page"]:
+        module = "other"
+        for fixture_name, mod in FIXTURE_TO_MODULE.items():
             if fixture_name in item.funcargs:
                 page = item.funcargs[fixture_name]
+                module = mod
                 break
 
         if page and not page.is_closed():
+            # Create module subfolder
+            module_dir = SCREENSHOT_DIR / module
+            module_dir.mkdir(parents=True, exist_ok=True)
+
             status = "PASS" if report.passed else "FAIL"
             ts = datetime.now().strftime("%H%M%S")
             name = f"{status}_{item.name}_{ts}.png"
-            path = SCREENSHOT_DIR / name
+            path = module_dir / name
             try:
                 page.screenshot(path=str(path), full_page=True)
                 print(f"\n  Screenshot: {path}")
