@@ -218,31 +218,13 @@ function findScreenshot(step, status){
 }
 
 function screenshotCell(step, status, runId, screenshotFile, suiteKey){
-  const folder = SUITE_TO_FOLDER[suiteKey] || "other";
-
   if(screenshotFile){
-    const url = SCREENSHOT_BASE + folder + "/" + screenshotFile;
+    /* screenshotFile is like "im/PASS_test_01_navigate_to_im_143322.png" */
+    const url = SCREENSHOT_BASE + screenshotFile;
     const cls = status === "FAIL" ? "ss-fail" : "ss-pass";
     const label = status === "FAIL" ? "Failure" : "View";
     return `<a class="ss-link ${cls}" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">📸 ${label}</a>`;
   }
-
-  /* Try finding from index */
-  const key = folder + "/" + status + "_" + step.toLowerCase().replace(/[^a-z0-9]+/g, '_');
-  for(const [k, fname] of Object.entries(SCREENSHOT_INDEX)){
-    if(k.startsWith(folder + "/") && k.includes(status)){
-      /* Match by test number */
-      const tcMatch = step.match(/TC(\d+)/i);
-      const testMatch = fname.match(/test_(\d+)/);
-      if(tcMatch && testMatch && tcMatch[1] === testMatch[1]){
-        const url = SCREENSHOT_BASE + folder + "/" + fname;
-        const cls = status === "FAIL" ? "ss-fail" : "ss-pass";
-        const label = status === "FAIL" ? "Failure" : "View";
-        return `<a class="ss-link ${cls}" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">📸 ${label}</a>`;
-      }
-    }
-  }
-
   return `<span class="ss-none">—</span>`;
 }
 
@@ -419,7 +401,7 @@ async function checkLiveRun(){
 }
 
 function startAutoRefresh(){
-  setInterval(() => { checkLiveRun(); }, 15000);
+  setInterval(() => { checkLiveRun(); }, 60000);
   setInterval(async () => {
     try {
       const resp = await fetch("data.json?" + Date.now());
@@ -431,19 +413,8 @@ function startAutoRefresh(){
 }
 
 async function loadScreenshotIndex(){
-  const folders = Object.values(SUITE_TO_FOLDER);
-  for(const folder of folders){
-    try{
-      const resp = await fetch(`https://api.github.com/repos/SAIFA-ASGHAR/sirp-qa-automation/contents/reports/screenshots/${folder}`);
-      if(!resp.ok) continue;
-      const files = await resp.json();
-      for(const f of files){
-        if(!f.name.endsWith(".png")) continue;
-        const m = f.name.match(/^(PASS|FAIL)_(test_.+?)_\d{6}\.png$/);
-        if(m) SCREENSHOT_INDEX[folder + "/" + m[1] + "_" + m[2]] = f.name;
-      }
-    } catch(e){}
-  }
+  /* Screenshots are now embedded in data.json by update_dashboard.py
+     No GitHub API calls needed */
 }
 
 fetch("data.json?" + Date.now())

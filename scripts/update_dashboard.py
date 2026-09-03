@@ -33,16 +33,19 @@ def parse_pytest_output(filepath, suite_name):
     now = datetime.now(PKT)
 
     # Collect screenshot filenames from output
-    screenshots = {}  # test_name -> filename
+    # conftest prints: Screenshot: reports/screenshots/im/PASS_test_01_navigate_to_im_143322.png
+    screenshots = {}  # test_name -> full_path_from_screenshots_folder
     for line in text.splitlines():
         ss_match = re.search(r'Screenshot:\s+reports/screenshots/(.+\.png)', line)
         if ss_match:
-            ss_file = ss_match.group(1)
-            # Extract test name from filename pattern: STATUS_testname_HHMMSS.png
-            parts = ss_file.split("_", 1)
+            ss_path = ss_match.group(1)  # e.g. "im/PASS_test_01_navigate_to_im_143322.png"
+            # Extract just the filename for matching
+            fname = ss_path.split("/")[-1] if "/" in ss_path else ss_path
+            # Parse: PASS_test_01_navigate_to_im_143322.png -> key = test_01_navigate_to_im
+            parts = fname.split("_", 1)  # ["PASS", "test_01_navigate_to_im_143322.png"]
             if len(parts) > 1:
-                test_key = parts[1].rsplit("_", 1)[0]  # remove timestamp
-                screenshots[test_key] = ss_file
+                test_key = parts[1].rsplit("_", 1)[0]  # remove timestamp -> "test_01_navigate_to_im"
+                screenshots[test_key] = ss_path  # store full subfolder path
 
     # Parse our custom log output: [PASS] TC01 — Navigate to IM
     lines = text.splitlines()
@@ -58,13 +61,16 @@ def parse_pytest_output(filepath, suite_name):
                 if next_line.startswith("       "):
                     detail = next_line.strip()
 
-            # Try to find matching screenshot
+            # Match screenshot by test number
             screenshot = ""
-            step_clean = step.lower().replace(" ", "_").replace("—", "").replace("-", "_")
-            for key, fname in screenshots.items():
-                if key in step_clean or step_clean in key:
-                    screenshot = fname
-                    break
+            tc_match = re.search(r'TC(\d+)', step)
+            if tc_match:
+                tc_num = tc_match.group(1).zfill(2)  # "01", "02", etc
+                for key, path in screenshots.items():
+                    # key is like "test_01_navigate_to_im"
+                    if f"test_{tc_num}_" in key:
+                        screenshot = path
+                        break
 
             results.append({
                 "step": step,
