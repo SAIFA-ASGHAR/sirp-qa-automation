@@ -221,7 +221,8 @@ function screenshotCell(step, status, runId, screenshotFile, suiteKey){
   const folder = SUITE_TO_FOLDER[suiteKey] || "other";
 
   if(screenshotFile){
-    const url = SCREENSHOT_BASE + folder + "/" + screenshotFile;
+    /* screenshotFile already includes subfolder (e.g. "im/PASS_test_01...png") */
+    const url = SCREENSHOT_BASE + screenshotFile;
     const cls = status === "FAIL" ? "ss-fail" : "ss-pass";
     const label = status === "FAIL" ? "Failure" : "View";
     return `<a class="ss-link ${cls}" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">📸 ${label}</a>`;
