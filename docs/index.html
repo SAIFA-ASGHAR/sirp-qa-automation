@@ -218,13 +218,31 @@ function findScreenshot(step, status){
 }
 
 function screenshotCell(step, status, runId, screenshotFile, suiteKey){
+  const folder = SUITE_TO_FOLDER[suiteKey] || "other";
+
   if(screenshotFile){
-    /* screenshotFile is like "im/PASS_test_01_navigate_to_im_143322.png" */
-    const url = SCREENSHOT_BASE + screenshotFile;
+    const url = SCREENSHOT_BASE + folder + "/" + screenshotFile;
     const cls = status === "FAIL" ? "ss-fail" : "ss-pass";
     const label = status === "FAIL" ? "Failure" : "View";
     return `<a class="ss-link ${cls}" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">📸 ${label}</a>`;
   }
+
+  /* Try finding from index */
+  const key = folder + "/" + status + "_" + step.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+  for(const [k, fname] of Object.entries(SCREENSHOT_INDEX)){
+    if(k.startsWith(folder + "/") && k.includes(status)){
+      /* Match by test number */
+      const tcMatch = step.match(/TC(\d+)/i);
+      const testMatch = fname.match(/test_(\d+)/);
+      if(tcMatch && testMatch && tcMatch[1] === testMatch[1]){
+        const url = SCREENSHOT_BASE + folder + "/" + fname;
+        const cls = status === "FAIL" ? "ss-fail" : "ss-pass";
+        const label = status === "FAIL" ? "Failure" : "View";
+        return `<a class="ss-link ${cls}" href="${url}" target="_blank" onclick="event.preventDefault();openScreenshot('${url}')">📸 ${label}</a>`;
+      }
+    }
+  }
+
   return `<span class="ss-none">—</span>`;
 }
 
@@ -413,8 +431,17 @@ function startAutoRefresh(){
 }
 
 async function loadScreenshotIndex(){
-  /* Screenshots are now embedded in data.json by update_dashboard.py
-     No GitHub API calls needed */
+  /* Build index from data.json screenshot fields — no GitHub API needed */
+  if(!DATA || !DATA.runs) return;
+  for(const run of DATA.runs){
+    const folder = SUITE_TO_FOLDER[run.suite] || "other";
+    for(const r of run.results){
+      if(r.screenshot){
+        const m = r.screenshot.match(/^(?:.*\/)?(PASS|FAIL)_(test_.+?)_\d{6}\.png$/);
+        if(m) SCREENSHOT_INDEX[folder + "/" + m[1] + "_" + m[2]] = r.screenshot;
+      }
+    }
+  }
 }
 
 fetch("data.json?" + Date.now())
