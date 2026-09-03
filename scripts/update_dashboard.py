@@ -151,6 +151,10 @@ def main():
     if auto:
         new_runs.append(auto)
 
+    ent = parse_pytest_output(REPORTS_DIR / "entities_output.txt", "entities")
+    if ent:
+        new_runs.append(ent)
+
     # Update
     for run in new_runs:
         data["runs"].append(run)

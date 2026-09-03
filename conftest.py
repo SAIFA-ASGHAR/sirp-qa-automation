@@ -46,7 +46,7 @@ def pytest_runtest_makereport(item, call):
     if report.when == "call":
         # Try to find the page from the test's fixtures
         page = None
-        for fixture_name in ["im_page", "sara_page", "auto_page"]:
+        for fixture_name in ["im_page", "sara_page", "auto_page", "ent_page"]:
             if fixture_name in item.funcargs:
                 page = item.funcargs[fixture_name]
                 break

@@ -11,6 +11,7 @@ on:
         options:
           - im
           - autonomy
+          - entities
           - all
 
   push:
@@ -45,6 +46,8 @@ jobs:
         continue-on-error: true
         env:
           HEADLESS: "1"
+          SIRP_EMAIL: ${{ secrets.SIRP_EMAIL }}
+          SIRP_PASSWORD: ${{ secrets.SIRP_PASSWORD }}
         run: |
           mkdir -p reports
           python -m pytest tests/test_incident_management_e2e.py -v -s 2>&1 | tee reports/im_output.txt || true
@@ -54,9 +57,22 @@ jobs:
         continue-on-error: true
         env:
           HEADLESS: "1"
+          SIRP_EMAIL: ${{ secrets.SIRP_EMAIL }}
+          SIRP_PASSWORD: ${{ secrets.SIRP_PASSWORD }}
         run: |
           mkdir -p reports
           python -m pytest tests/test_autonomy_automation_e2e.py -v -s 2>&1 | tee reports/autonomy_output.txt || true
+
+      - name: Run Entities Suite
+        if: ${{ github.event.inputs.suite == 'entities' || github.event.inputs.suite == 'all' || github.event.inputs.suite == '' }}
+        continue-on-error: true
+        env:
+          HEADLESS: "1"
+          SIRP_EMAIL: ${{ secrets.SIRP_EMAIL }}
+          SIRP_PASSWORD: ${{ secrets.SIRP_PASSWORD }}
+        run: |
+          mkdir -p reports
+          python -m pytest tests/test_entities_e2e.py -v -s 2>&1 | tee reports/entities_output.txt || true
 
       - name: Update dashboard
         env:

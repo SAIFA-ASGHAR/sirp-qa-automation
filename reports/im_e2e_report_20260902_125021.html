@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<title>SIRP IM E2E — 20260902_125021</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f172a;color:#e5e7eb}
+.hdr{background:linear-gradient(135deg,#1e1b4b,#312e81,#1e40af);padding:40px 48px}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.logo{font-size:13px;color:#a5b4fc;letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.rid{font-size:11px;color:#818cf8;background:rgba(99,102,241,.2);padding:4px 10px;border-radius:8px}
+h1{font-size:26px;font-weight:700;color:#fff;margin:12px 0 4px}
+.sub{color:#a5b4fc;font-size:14px}
+.meta{display:flex;gap:24px;margin-top:16px;flex-wrap:wrap}
+.mi{font-size:12px;color:#818cf8}.mi span{color:#c7d2fe;font-weight:500}
+.content{padding:32px 48px;max-width:1300px;margin:0 auto}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.metric{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;text-align:center}
+.mv{font-size:32px;font-weight:700;margin-bottom:4px}
+.ml{font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:1px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:12px;margin-bottom:24px;overflow:hidden}
+.ch{padding:16px 20px;background:#263548;border-bottom:1px solid #334155;font-size:14px;font-weight:600;color:#e2e8f0}
+table{width:100%;border-collapse:collapse}
+th{padding:10px 12px;text-align:left;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;background:#162032;border-bottom:1px solid #334155}
+tr:hover{background:rgba(255,255,255,.02)}
+.pb{background:#374151;border-radius:4px;height:10px;width:100%;margin:8px 0}
+.pf{border-radius:4px;height:10px}
+.footer{padding:24px 48px;text-align:center;color:#475569;font-size:12px;border-top:1px solid #1e293b;margin-top:16px}
+</style></head><body>
+<div class="hdr">
+  <div class="hdr-top"><div class="logo">SIRP Platform — Incident Management QA</div><div class="rid">RUN: 20260902_125021</div></div>
+  <h1>Incident Management — End-to-End Test Report</h1>
+  <div class="sub">Create Ticket → All Tabs → OmniSense Agents → Artifacts → Comments</div>
+  <div class="meta">
+    <div class="mi">Date: <span>September 02, 2026</span></div>
+    <div class="mi">Time: <span>12:53:34</span></div>
+    <div class="mi">Environment: <span>demo3.sirp.io</span></div>
+    <div class="mi">Prepared by: <span>Saifa — QA Engineer</span></div>
+    <div class="mi">Framework: <span>Playwright + pytest</span></div>
+  </div>
+</div>
+<div class="content">
+  <div class="metrics">
+    <div class="metric"><div class="mv" style="color:#e2e8f0">18</div><div class="ml">Total Tests</div></div>
+    <div class="metric"><div class="mv" style="color:#22c55e">18</div><div class="ml">Passed</div></div>
+    <div class="metric"><div class="mv" style="color:#ef4444">0</div><div class="ml">Failed</div></div>
+    <div class="metric"><div class="mv" style="color:#22c55e">100%</div><div class="ml">Pass Rate</div></div>
+  </div>
+  <div class="card" style="padding:20px 24px;margin-bottom:24px">
+    <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+      <span style="font-size:13px;color:#94a3b8">Overall pass rate</span>
+      <span style="font-size:13px;font-weight:600;color:#22c55e">100%</span>
+    </div>
+    <div class="pb"><div class="pf" style="width:100%;background:#22c55e"></div></div>
+  </div>
+  <div class="card">
+    <div class="ch">Step-by-Step Test Results</div>
+    <table>
+      <thead><tr><th>#</th><th>Time</th><th>Test Step</th><th>Status</th><th>Detail / Evidence</th></tr></thead>
+      <tbody><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">1</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:50:41</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC01 — Navigate to Incident Management</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Grid loaded</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">2</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:50:42</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC02 — Grid filter tabs</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">All / Alert / Case / Incident tabs visible</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">3</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:51:30</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC03 — Create Ticket</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Ticket created — form closed, on grid</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">4</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:51:45</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC04 — Open Ticket Detail</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">ID: 105002, Tabs: ['OmniSense', 'General', 'Artifacts', 'Affected Entities', 'Remediation', 'Comments', 'Tasks', 'OmniMap', 'Logs']</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">5</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:51:50</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC05 — General Tab</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Content: TIME BREAKDOWN, DESCRIPTION, Severity, Priority, Status, Created</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">6</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:51:58</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC06 — OmniSense Assist Mode</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Agents: ['Enrichment Agent', 'Classification Agent', 'Analysis Agent']</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">7</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:52:05</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC07 — Run Enrichment Agent</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Agent visible but disabled — expected on ticket with no artifacts</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">8</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:52:20</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC08 — Run Classification Agent</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Agent selected → Run → Completed</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">9</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:52:36</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC09 — OmniSense Autonomous Mode</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Re-invoke → Autonomous → Assigned case to Sara</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">10</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:52:42</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC10 — Artifacts Tab</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Content: Domain, Hash</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">11</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:52:47</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC11 — Affected Entities Tab</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Content: Create Entity, Add, Entity, Domain, No data, No Data</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">12</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:52:52</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC12 — Remediation Tab</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Sections: Implemented Remediation, Remediation Details, Containment Details</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">13</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:53:08</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC13 — Add Comment</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Comment typed and submitted</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">14</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:53:13</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC14 — Tasks Tab</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Content: Create Task, No tasks</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">15</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:53:20</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC15 — OmniMap Tab</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Graph/visualization rendered</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">16</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:53:25</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC16 — Logs Tab</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Content: Playbooks, Playbook, Log</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">17</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:53:31</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC17 — Context + Timeline</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Context: MITRE Mapping, Severity, Priority | Timeline: Updated, Changed, Status</td>
+        </tr><tr style="border-bottom:1px solid #1f2937;">
+          <td style="padding:10px 12px;color:#6b7280;font-size:12px;text-align:center;">18</td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">12:53:33</td>
+          <td style="padding:10px 12px;color:#e5e7eb;font-size:13px;font-weight:500;">TC18 — SARA Panel</td>
+          <td style="padding:10px 12px;"><span style="background:#dcfce7;color:#166534;padding:3px 12px;border-radius:12px;font-size:12px;font-weight:600;">✅ PASS</span></td>
+          <td style="padding:10px 12px;color:#9ca3af;font-size:12px;">Content: input: Type your message, Co-Analyst, Sara, SARA, your AI assistant, Hello, OmniSense</td>
+        </tr></tbody>
+    </table>
+  </div>
+</div>
+<div class="footer">SIRP IM E2E Report • 2026-09-02 12:53 • Confidential — Internal QA Use Only</div>
+</body></html>
