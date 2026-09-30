@@ -1,21 +1,21 @@
 {
   "suites": {
     "incident_management": {
-      "last_run": "2026-09-30T17:21:09.278704+05:00",
+      "last_run": "2026-09-30T17:31:18.579514+05:00",
       "last_passed": 18,
       "last_failed": 0,
       "last_total": 18,
       "last_rate": 100.0
     },
     "autonomy_automation": {
-      "last_run": "2026-09-30T17:21:09.279749+05:00",
+      "last_run": "2026-09-30T17:31:18.580543+05:00",
       "last_passed": 25,
       "last_failed": 1,
       "last_total": 26,
       "last_rate": 96.2
     },
     "entities": {
-      "last_run": "2026-09-30T17:21:09.280976+05:00",
+      "last_run": "2026-09-30T17:31:18.581769+05:00",
       "last_passed": 9,
       "last_failed": 1,
       "last_total": 10,
@@ -5879,6 +5879,435 @@
           "detail": "Overview tab verified",
           "time": "17:21:09",
           "screenshot": "entities/PASS_test_10_verify_overview_tab_122108.png"
+        }
+      ]
+    },
+    {
+      "suite": "incident_management",
+      "run_id": "20260930_173118",
+      "timestamp": "2026-09-30T17:31:18.579514+05:00",
+      "date": "2026-09-30",
+      "time": "17:31:18",
+      "duration_s": 186.59,
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "pass_rate": 100.0,
+      "environment": "demo3.sirp.io",
+      "triggered_by": "SAIFA-ASGHAR",
+      "trigger_event": "push",
+      "results": [
+        {
+          "step": "TC01 \u2014 Navigate to Incident Management",
+          "status": "PASS",
+          "detail": "Grid loaded",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_01_navigate_to_im_122420.png"
+        },
+        {
+          "step": "TC02 \u2014 Grid filter tabs",
+          "status": "PASS",
+          "detail": "All / Alert / Case / Incident tabs visible",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_02_verify_grid_tabs_122421.png"
+        },
+        {
+          "step": "TC03 \u2014 Create Ticket",
+          "status": "PASS",
+          "detail": "Ticket created \u2014 form closed, on grid",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_03_create_ticket_122514.png"
+        },
+        {
+          "step": "TC04 \u2014 Open Ticket Detail",
+          "status": "PASS",
+          "detail": "ID: 114191, Tabs: ['OmniSense', 'General', 'Artifacts', 'Affected Entities', 'Remediation', 'Comments', 'Tasks', 'OmniMap', 'Logs']",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_04_open_ticket_detail_122526.png"
+        },
+        {
+          "step": "TC05 \u2014 General Tab",
+          "status": "PASS",
+          "detail": "Content: TIME BREAKDOWN, DESCRIPTION, Severity, Priority, Status, Created",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_05_general_tab_122530.png"
+        },
+        {
+          "step": "TC06 \u2014 OmniSense Assist Mode",
+          "status": "PASS",
+          "detail": "Agents: ['Enrichment Agent', 'Classification Agent', 'Analysis Agent']",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_06_omnisense_assist_mode_122538.png"
+        },
+        {
+          "step": "TC07 \u2014 Run Enrichment Agent",
+          "status": "PASS",
+          "detail": "Agent selected \u2192 Run \u2192 Completed",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_07_run_enrichment_agent_122552.png"
+        },
+        {
+          "step": "TC08 \u2014 Run Classification Agent",
+          "status": "PASS",
+          "detail": "Agent selected \u2192 Run \u2192 Completed",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_08_run_classification_agent_122610.png"
+        },
+        {
+          "step": "TC09 \u2014 OmniSense Autonomous Mode",
+          "status": "PASS",
+          "detail": "Re-invoke \u2192 Autonomous \u2192 Assigned case to Sara",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_09_autonomous_mode_122626.png"
+        },
+        {
+          "step": "TC10 \u2014 Artifacts Tab",
+          "status": "PASS",
+          "detail": "Content: Add Artifact, Add artifact, Domain, Hash",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_10_artifacts_tab_122630.png"
+        },
+        {
+          "step": "TC11 \u2014 Affected Entities Tab",
+          "status": "PASS",
+          "detail": "Content: Create Entity, Entity, Domain, No data, No Data",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_11_affected_entities_tab_122635.png"
+        },
+        {
+          "step": "TC12 \u2014 Remediation Tab",
+          "status": "PASS",
+          "detail": "Sections: Implemented Remediation, Remediation Details, Containment Details",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_12_remediation_tab_122640.png"
+        },
+        {
+          "step": "TC13 \u2014 Add Comment",
+          "status": "PASS",
+          "detail": "Comment typed and submitted",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_13_add_comment_122655.png"
+        },
+        {
+          "step": "TC14 \u2014 Tasks Tab",
+          "status": "PASS",
+          "detail": "Content: Create Task, No tasks",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_14_tasks_tab_122659.png"
+        },
+        {
+          "step": "TC15 \u2014 OmniMap Tab",
+          "status": "PASS",
+          "detail": "Graph/visualization rendered",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_15_omnimap_tab_122705.png"
+        },
+        {
+          "step": "TC16 \u2014 Logs Tab",
+          "status": "PASS",
+          "detail": "Content: Playbooks, Playbook, Log",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_16_logs_tab_122710.png"
+        },
+        {
+          "step": "TC17 \u2014 Context + Timeline",
+          "status": "PASS",
+          "detail": "Context: MITRE Mapping, Severity, Priority | Timeline: Changed, Status",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_17_context_and_timeline_122715.png"
+        },
+        {
+          "step": "TC18 \u2014 SARA Panel",
+          "status": "PASS",
+          "detail": "Content: input: Type your message, Co-Analyst, Sara, SARA, your AI assistant, Hello, OmniSense",
+          "time": "17:31:18",
+          "screenshot": "im/PASS_test_18_sara_panel_122718.png"
+        }
+      ]
+    },
+    {
+      "suite": "autonomy_automation",
+      "run_id": "20260930_173118",
+      "timestamp": "2026-09-30T17:31:18.580543+05:00",
+      "date": "2026-09-30",
+      "time": "17:31:18",
+      "duration_s": 157.34,
+      "total": 26,
+      "passed": 25,
+      "failed": 1,
+      "pass_rate": 96.2,
+      "environment": "demo3.sirp.io",
+      "triggered_by": "SAIFA-ASGHAR",
+      "trigger_event": "push",
+      "results": [
+        {
+          "step": "TC01 \u2014 Navigate to Autonomy",
+          "status": "PASS",
+          "detail": "URL: https://demo3.sirp.io/autonomy/automation/applications",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_01_navigate_to_autonomy_122729.png"
+        },
+        {
+          "step": "TC02 \u2014 Top-level tabs",
+          "status": "FAIL",
+          "detail": "Locator expected to be visible",
+          "time": "17:31:18",
+          "screenshot": "autonomy/FAIL_test_02_verify_top_tabs_122734.png"
+        },
+        {
+          "step": "TC03 \u2014 Sidebar sub-sections",
+          "status": "PASS",
+          "detail": "Found: ['Applications', 'Artifact Types', 'Actions', 'Ingestion Sources']",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_03_verify_sidebar_122734.png"
+        },
+        {
+          "step": "TC04 \u2014 Applications grid loads",
+          "status": "PASS",
+          "detail": "9 type badges visible. Show 01 - 9 from 233",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_04_applications_grid_loads_122738.png"
+        },
+        {
+          "step": "TC05 \u2014 Card anatomy",
+          "status": "PASS",
+          "detail": "Badges:9 Status:25 Toggles:9 3-dots:1 Counts:10",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_05_applications_card_anatomy_122738.png"
+        },
+        {
+          "step": "TC06 \u2014 Applications search (local)",
+          "status": "PASS",
+          "detail": "2 matches. Before: Show 01 - 9 from 233 \u2192 After: Show 01 - 2 from 2",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_06_applications_search_122741.png"
+        },
+        {
+          "step": "TC07 \u2014 Manage Filters (Status \u2192 Enable)",
+          "status": "PASS",
+          "detail": "Before: Show 01 - 9 from 233 \u2192 After: Show 01 - 9 from 220. Status clicked: False, Enable clicked: False. Filtered: True. Enabled badges: 9. Cleared: True",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_07_manage_filters_122746.png"
+        },
+        {
+          "step": "TC08 \u2014 Pagination",
+          "status": "PASS",
+          "detail": "Page 1: Show 01 - 9 from 233 \u2192 Page 2: Show 10 - 18 from 233 \u2192 Back to 1: Show 01 - 9 from 233. Page 2 loaded: True",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_08_pagination_122750.png"
+        },
+        {
+          "step": "TC09 \u2014 + Add Integration button",
+          "status": "PASS",
+          "detail": "Button visible",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_09_add_integration_button_122751.png"
+        },
+        {
+          "step": "TC10 \u2014 Filter Custom \u2192 Detail \u2192 Add Action \u2192 Verify",
+          "status": "PASS",
+          "detail": "App: 'Virus Total'. URL: https://demo3.sirp.io/autonomy/automation/applications/3. Heading: True. Form: Action 'QA Auto Action 20260930122718' \u2014 Create clicked (drawer still open \u2014 validation error). Reloaded: actions 10\u219210, name visible=False",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_10_application_detail_view_122849.png"
+        },
+        {
+          "step": "TC11 \u2014 Artifact Types navigate",
+          "status": "PASS",
+          "detail": "Page loaded. Show 1-20 from 233",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_11_artifact_types_navigate_122853.png"
+        },
+        {
+          "step": "TC12 \u2014 Artifact Types columns",
+          "status": "PASS",
+          "detail": "Matched: ['ID', 'TYPE', 'ARTIFACT', 'VALIDATION', 'ACTIONS'] from headers: ['ID', 'TYPE', 'ARTIFACT', 'VALIDATION', 'ACTIONS']",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_12_artifact_types_table_columns_122853.png"
+        },
+        {
+          "step": "TC13 \u2014 Artifact Types row data",
+          "status": "PASS",
+          "detail": "20 rows. Integer badges: 2, Alphanumeric: 17",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_13_artifact_types_row_data_122853.png"
+        },
+        {
+          "step": "TC14 \u2014 + Create Artifact Type button",
+          "status": "PASS",
+          "detail": "Button visible",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_14_create_artifact_type_button_122853.png"
+        },
+        {
+          "step": "TC15 \u2014 Artifact Types 3-dot menu",
+          "status": "PASS",
+          "detail": "Menu items: (opened, items not captured)",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_15_artifact_types_row_actions_122855.png"
+        },
+        {
+          "step": "TC16 \u2014 Actions navigate",
+          "status": "PASS",
+          "detail": "Page loaded. Show 1-20 from 1381",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_16_actions_navigate_122859.png"
+        },
+        {
+          "step": "TC17 \u2014 Actions table columns",
+          "status": "PASS",
+          "detail": "Matched: ['ACTIONS NAME', 'APPLICATION', 'DESCRIPTION', 'TYPE', 'MULTI-INPUT', 'MULTI-STEP', 'ACTIONS'] from headers: ['ACTIONS NAME', 'APPLICATION', 'DESCRIPTION', 'TYPE', 'MULTI-INPUT', 'MULTI-STEP', 'ACTIONS']",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_17_actions_table_columns_122859.png"
+        },
+        {
+          "step": "TC18 \u2014 Actions row data",
+          "status": "PASS",
+          "detail": "20 rows. Custom:20 Default:0 YES:23 NO:17",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_18_actions_row_data_122859.png"
+        },
+        {
+          "step": "TC19 \u2014 + Create Action button",
+          "status": "PASS",
+          "detail": "Button visible",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_19_create_action_button_122859.png"
+        },
+        {
+          "step": "TC20 \u2014 Create Action from Actions page",
+          "status": "PASS",
+          "detail": "Action: 'QA Actions Page 20260930122718'. Drawer still open \u2014 validation error",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_20_create_action_from_actions_page_122947.png"
+        },
+        {
+          "step": "TC21 \u2014 Actions 3-dot menu",
+          "status": "PASS",
+          "detail": "Menu items: []. Matched expected: []",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_21_actions_three_dot_menu_122949.png"
+        },
+        {
+          "step": "TC21 \u2014 Ingestion Sources navigate",
+          "status": "PASS",
+          "detail": "Page loaded. URL: https://demo3.sirp.io/autonomy/automation/ingestion-sources",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_21_actions_three_dot_menu_122949.png"
+        },
+        {
+          "step": "TC23 \u2014 Ingestion Sources grid loads",
+          "status": "PASS",
+          "detail": "Cards with ID label: 20, Inactive badges: 15, Platform badges: 19",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_23_ingestion_sources_grid_loads_122953.png"
+        },
+        {
+          "step": "TC24 \u2014 Ingestion Source card anatomy",
+          "status": "PASS",
+          "detail": "Platform:19 ID:20 Type:20 Method:20 API:17 Email:3 Inactive:15 Toggles:0",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_24_ingestion_source_card_anatomy_122953.png"
+        },
+        {
+          "step": "TC25 \u2014 + Create Ingestion Source button",
+          "status": "PASS",
+          "detail": "Button visible",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_25_create_ingestion_source_button_122953.png"
+        },
+        {
+          "step": "TC26 \u2014 Ingestion Source card actions",
+          "status": "PASS",
+          "detail": "Edit icons: 0, 3-dot menus: 1. Menu items: (not captured)",
+          "time": "17:31:18",
+          "screenshot": "autonomy/PASS_test_26_ingestion_source_card_actions_122955.png"
+        }
+      ]
+    },
+    {
+      "suite": "entities",
+      "run_id": "20260930_173118",
+      "timestamp": "2026-09-30T17:31:18.581769+05:00",
+      "date": "2026-09-30",
+      "time": "17:31:18",
+      "duration_s": 82.08,
+      "total": 10,
+      "passed": 9,
+      "failed": 1,
+      "pass_rate": 90.0,
+      "environment": "demo3.sirp.io",
+      "triggered_by": "SAIFA-ASGHAR",
+      "trigger_event": "push",
+      "results": [
+        {
+          "step": "TC01 \u2014 Navigate to Entities",
+          "status": "PASS",
+          "detail": "Entities page loaded, Create Entity button visible",
+          "time": "17:31:18",
+          "screenshot": "entities/PASS_test_01_navigate_to_entities_123003.png"
+        },
+        {
+          "step": "TC02 \u2014 Create Entity",
+          "status": "PASS",
+          "detail": "Entity '[QA AUTO] Entity 20260930_122956' created",
+          "time": "17:31:18",
+          "screenshot": "entities/PASS_test_02_create_entity_123019.png"
+        },
+        {
+          "step": "TC03 \u2014 Verify Entity in Grid",
+          "status": "PASS",
+          "detail": "Entity '[QA AUTO] Entity 20260930_122956' found in grid",
+          "time": "17:31:18",
+          "screenshot": "entities/PASS_test_03_verify_entity_in_grid_123023.png"
+        },
+        {
+          "step": "TC04 \u2014 Edit Entity Status",
+          "status": "FAIL",
+          "detail": "Locator.click: Timeout 30000ms exceeded.",
+          "time": "17:31:18",
+          "screenshot": "entities/FAIL_test_04_edit_entity_status_123054.png"
+        },
+        {
+          "step": "TC05 \u2014 Open Entity Detail",
+          "status": "PASS",
+          "detail": "Detail view loaded with Overview tab",
+          "time": "17:31:18",
+          "screenshot": "entities/PASS_test_05_open_entity_detail_123056.png"
+        },
+        {
+          "step": "TC06 \u2014 Add Relationship",
+          "status": "PASS",
+          "detail": "CONNECTED_TO relationship added",
+          "time": "17:31:18",
+          "screenshot": "entities/PASS_test_06_add_relationship_123110.png"
+        },
+        {
+          "step": "TC07 \u2014 Related Incidents Tab",
+          "status": "PASS",
+          "detail": "Related Incidents tab opened",
+          "time": "17:31:18",
+          "screenshot": "entities/PASS_test_07_browse_related_incidents_123111.png"
+        },
+        {
+          "step": "TC08 \u2014 Related Threat Intels Tab",
+          "status": "PASS",
+          "detail": "Related Threat Intels tab opened",
+          "time": "17:31:18",
+          "screenshot": "entities/PASS_test_08_browse_related_threat_intels_123113.png"
+        },
+        {
+          "step": "TC09 \u2014 OmniMap Tab",
+          "status": "PASS",
+          "detail": "OmniMap tab loaded",
+          "time": "17:31:18",
+          "screenshot": "entities/PASS_test_09_browse_omnimap_tab_123115.png"
+        },
+        {
+          "step": "TC10 \u2014 Overview Tab",
+          "status": "PASS",
+          "detail": "Overview tab verified",
+          "time": "17:31:18",
+          "screenshot": "entities/PASS_test_10_verify_overview_tab_123118.png"
         }
       ]
     }
