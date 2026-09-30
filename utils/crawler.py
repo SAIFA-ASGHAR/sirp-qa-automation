@@ -19,13 +19,13 @@ from typing import Optional
 import json
 import re
 import time
+import os
 
 
 BASE_URL   = "https://demo3.sirp.io"
 LOGIN_URL  = f"{BASE_URL}/login"
-EMAIL      = "saifa@sirp.io"
-PASSWORD   = "S@1f@s1rp"
-
+EMAIL      = os.environ.get("SIRP_EMAIL", "")
+PASSWORD   = os.environ.get("SIRP_PASSWORD", "")
 # Pages we never want to crawl (logout, external links, etc.)
 SKIP_PATTERNS = [
     "/logout", "/signout", "mailto:", "tel:", "javascript:",
